@@ -117,10 +117,10 @@
 </div>
 
 <div class="container hidden" id="test-page">
-    <div class="dashboard">
-        <div>Question <span id="current-q-num">1</span> of <span id="total-q-num">0</span></div>
+    <div class="dashboard" style="justify-content: flex-end;">
         <div id="timer">20:00</div>
     </div>
+    
     <div class="q-nav-grid" id="q-nav-grid"></div>
     
     <div id="question-container">
@@ -128,7 +128,11 @@
         <div class="options" id="options-container"></div>
     </div>
 
-    <div class="btn-group">
+    <div style="text-align: center; margin-top: 30px; font-size: 18px; font-weight: bold; color: var(--primary);">
+        Question <span id="current-q-num">1</span> of <span id="total-q-num">0</span>
+    </div>
+
+    <div class="btn-group" style="margin-top: 15px;">
         <button class="btn-primary" onclick="prevQuestion()" id="btn-prev">Previous</button>
         <button class="btn-success" onclick="submitTestConf()" id="btn-submit">Submit Test</button>
         <button class="btn-primary" onclick="nextQuestion()" id="btn-next">Next</button>
