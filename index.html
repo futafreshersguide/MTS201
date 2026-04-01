@@ -466,39 +466,96 @@
             opts: ["\\( 6x^2 y \\)", "\\( 3x^2 y^2 \\)", "\\( 2x^3 y \\)", "\\( 6xy \\)"], 
             ans: 0 
         },
-      { 
+     // BATCH 9 - LEGACY
+        { 
             q: "Find the third-order partial derivative \\( \\frac{\\partial^3 z}{\\partial y \\partial x^2} \\) for \\( z = x^3 e^{2y} \\).", 
             opts: ["\\( 12x e^{2y} \\)", "\\( 6x e^{2y} \\)", "\\( 12x^2 e^{2y} \\)", "\\( 6x^2 e^{2y} \\)"], 
             ans: 0 
         },
         { 
-            q: "If \\( u = \sin(x + ct) \\), show that \\( \frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2} \\). This is an example of what type of equation?", 
+            q: "If \\( u = \\sin(x + ct) \\), show that \\( \\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2} \\). This is an example of what type of equation?", 
             opts: ["Laplace Equation", "Wave Equation", "Heat Equation", "Poisson Equation"], 
             ans: 1 
         },
         { 
-            q: "Find the total differential \\( dz \\) for the function \\( z = x^2 y + \sin(xy) \\).", 
-            opts: ["\\( (2xy + y\cos xy)dx + (x^2 + x\cos xy)dy \\)", "\\( (2xy)dx + (x^2)dy \\)", "\\( (2x + \cos y)dx + (2y + \cos x)dy \\)", "\\( y^2 dx + x^2 dy \\)"], 
+            q: "Find the total differential \\( dz \\) for the function \\( z = x^2 y + \\sin(xy) \\).", 
+            opts: ["\\( (2xy + y\\cos xy)dx + (x^2 + x\\cos xy)dy \\)", "\\( (2xy)dx + (x^2)dy \\)", "\\( (2x + \\cos y)dx + (2y + \\cos x)dy \\)", "\\( y^2 dx + x^2 dy \\)"], 
             ans: 0 
         },
         { 
-            q: "Using the method of logarithmic differentiation from Stroud, find \\( \frac{dy}{dx} \\) if \\( y = \frac{(x+1)^2 \sqrt{x-2}}{(x+3)^3} \\).", 
-            opts: ["\\( y[\frac{2}{x+1} + \frac{1}{2(x-2)} - \frac{3}{x+3}] \\)", "\\( y[\frac{1}{x+1} + \frac{1}{x-2} + \frac{1}{x+3}] \\)", "\\( \frac{2}{x+1} - \frac{3}{x+3} \\)", "\\( y[\ln(x+1) + \ln(x-2)] \\)"], 
+            q: "Using the method of logarithmic differentiation from Stroud, find \\( \\frac{dy}{dx} \\) if \\( y = \\frac{(x+1)^2 \\sqrt{x-2}}{(x+3)^3} \\).", 
+            opts: ["\\( y[\\frac{2}{x+1} + \\frac{1}{2(x-2)} - \\frac{3}{x+3}] \\)", "\\( y[\\frac{1}{x+1} + \\frac{1}{x-2} + \\frac{1}{x+3}] \\)", "\\( \\frac{2}{x+1} - \\frac{3}{x+3} \\)", "\\( y[\\ln(x+1) + \\ln(x-2)] \\)"], 
             ans: 0 
         },
-      { 
+        { 
+            q: "Evaluate the second derivative \\( \\frac{d^2y}{dx^2} \\) at \\( t = \\pi/4 \\) for the parametric curve \\( x = 2\\cos t, y = 2\\sin t \\).", 
+            opts: ["\\( -\\sqrt{2} \\)", "\\( -1/2 \\)", "\\( -2\\sqrt{2} \\)", "\\( -1 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = x^y \\), find the partial derivative \\( f_y \\).", 
+            opts: ["\\( yx^{y-1} \\)", "\\( x^y \\ln x \\)", "\\( x^y \\ln y \\)", "\\( y \\ln x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "A rectangular block has dimensions \\( x=10, y=12, z=15 \\). If each dimension increases by 0.1, find the approximate increase in volume \\( \\delta V \\).", 
+            opts: ["51", "5.1", "510", "0.51"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the second total derivative \\( \\frac{d^2y}{dx^2} \\) for \\( x^2 + y^2 = r^2 \\) using the formula \\( -\\frac{f_{xx}f_y^2 - 2f_{xy}f_xf_y + f_{yy}f_x^2}{f_y^3} \\).", 
+            opts: ["\\( -r^2/y^3 \\)", "\\( r^2/y^3 \\)", "\\( -x/y \\)", "\\( 1/y^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: " Determine the linearization \\( L(x) \\) of \\( f(x) = \\tan x \\) at \\( a = \\pi/4 \\).", 
+            opts: ["\\( 1 + 2(x - \\pi/4) \\)", "\\( 1 + (x - \\pi/4) \\)", "\\( \\sqrt{2} + 2(x - \\pi/4) \\)", "\\( 1 - 2(x - \\pi/4) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( z = \\phi(x + ay) + \\psi(x - ay) \\), where \\( \\phi \\) and \\( \\psi \\) are arbitrary functions, show that \\( \\frac{\\partial^2 z}{\\partial y^2} = \\)", 
+            opts: ["\\( a^2 \\frac{\\partial^2 z}{\\partial x^2} \\)", "\\( \\frac{1}{a^2} \\frac{\\partial^2 z}{\\partial x^2} \\)", "\\( a \\frac{\\partial^2 z}{\\partial x^2} \\)", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "Using Leibniz's Theorem, find the 2nd derivative of \\( y = x^2 \\sin x \\).", 
+            opts: ["\\( 2\\sin x + 4x\\cos x - x^2\\sin x \\)", "\\( x^2\\cos x + 2x\\sin x \\)", "\\( 2\\cos x - x^2\\sin x \\)", "\\( 4x\\cos x - x^2\\sin x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to 0} \\frac{x - \\sin x}{x^3} \\).", 
+            opts: ["1/6", "0", "1/3", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the total derivative \\( \\frac{du}{dx} \\) if \\( u = x^2 + y^2 \\) and \\( y = \\ln x \\).", 
+            opts: ["\\( 2x + \\frac{2\\ln x}{x} \\)", "\\( 2x + 2y \\)", "\\( 2x + \\frac{1}{x} \\)", "\\( \\frac{2x + 2y}{x} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the work done in moving a particle in the force field \\( F = 3x^2 i + (2xz - y) j + z k \\) along the straight line from \\( (0,0,0) \\) to \\( (2,1,3) \\).", 
+            opts: ["16", "12", "18", "20"], 
+            ans: 0 
+        },
+        { 
+            q: "The volume of a right circular cone is \\( V = \\frac{1}{3}\\pi r^2 h \\). If the height is kept constant, find the rate of change of volume with respect to the radius.", 
+            opts: ["\\( \\frac{2}{3}\\pi rh \\)", "\\( \\frac{1}{3}\\pi r^2 \\)", "\\( 2\\pi rh \\)", "\\( \\pi r^2 h \\)"], 
+            ans: 0 
+        },
+        // BATCH 10 - LEGACY
+        { 
             q: "Find the partial derivative \\( f_{xyz} \\) for the function \\( f(x,y,z) = e^{xyz} \\).", 
             opts: ["\\( (1 + 3xyz + x^2y^2z^2)e^{xyz} \\)", "\\( (1 + xyz)e^{xyz} \\)", "\\( xyze^{xyz} \\)", "\\( (x+y+z)e^{xyz} \\)"], 
             ans: 0 
         },
         { 
             q: "If \\( V = IR \\), use total differentials to find the change \\( dV \\) if \\( I \\) changes by \\( dI \\) and \\( R \\) changes by \\( dR \\).", 
-            opts: ["\\( R dI + I dR \\)", "\\( dI + dR \\)", "\\( IR(dI + dR) \\)", "\\( \frac{dI}{I} + \frac{dR}{R} \\)"], 
+            opts: ["\\( R dI + I dR \\)", "\\( dI + dR \\)", "\\( IR(dI + dR) \\)", "\\( \\frac{dI}{I} + \\frac{dR}{R} \\)"], 
             ans: 0 
         },
         { 
-            q: "Evaluate the indefinite integral \\( \\int \\frac{dx}{x\ln x} \\).", 
-            opts: ["\\( \ln(\ln x) + C \\)", "\\( (\ln x)^2 + C \\)", "\\( \frac{1}{\ln x} + C \\)", "\\( \ln x + C \\)"], 
+            q: "Evaluate the indefinite integral \\( \\int \\frac{dx}{x\\ln x} \\).", 
+            opts: ["\\( \\ln(\\ln x) + C \\)", "\\( (\\ln x)^2 + C \\)", "\\( \\frac{1}{\\ln x} + C \\)", "\\( \\ln x + C \\)"], 
             ans: 0 
         },
         { 
@@ -512,23 +569,23 @@
             ans: 0 
         },
         { 
-            q: "Find the Taylor series of \\( f(x) = \frac{1}{x} \\) centered at \\( a = 1 \\). The first three terms are:", 
+            q: "Find the Taylor series of \\( f(x) = \\frac{1}{x} \\) centered at \\( a = 1 \\). The first three terms are:", 
             opts: ["\\( 1 - (x-1) + (x-1)^2 \\)", "\\( 1 + (x-1) + (x-1)^2 \\)", "\\( (x-1) - (x-1)^2 \\)", "\\( 1 - x + x^2 \\)"], 
             ans: 0 
         },
         { 
-            q: "Evaluate \\( \\int_0^1 \int_0^x (x+y) dy dx \\).", 
+            q: "Evaluate \\( \\int_0^1 \\int_0^x (x+y) dy dx \\).", 
             opts: ["1/2", "2/3", "1/3", "1"], 
             ans: 0 
         },
         { 
-            q: "Find the total derivative \\( \frac{dz}{dx} \\) if \\( z = x^2 + y^3 \\) and \\( y = \sin x \\).", 
-            opts: ["\\( 2x + 3\sin^2 x \cos x \\)", "\\( 2x + 3y^2 \\)", "\\( 2x + 3\sin^2 x \\)", "\\( 2x \cos x \\)"], 
+            q: "Find the total derivative \\( \\frac{dz}{dx} \\) if \\( z = x^2 + y^3 \\) and \\( y = \\sin x \\).", 
+            opts: ["\\( 2x + 3\\sin^2 x \\cos x \\)", "\\( 2x + 3y^2 \\)", "\\( 2x + 3\\sin^2 x \\)", "\\( 2x \\cos x \\)"], 
             ans: 0 
         },
         { 
-            q: "Find the radius of curvature \\( \rho \\) for the curve \\( y = e^x \\) at the point \\( (0,1) \\).", 
-            opts: ["\\( 2\sqrt{2} \\)", "\\( \sqrt{2} \\)", "2", "1"], 
+            q: "Find the radius of curvature \\( \\rho \\) for the curve \\( y = e^x \\) at the point \\( (0,1) \\).", 
+            opts: ["\\( 2\\sqrt{2} \\)", "\\( \\sqrt{2} \\)", "2", "1"], 
             ans: 0 
         },
         { 
@@ -537,7 +594,7 @@
             ans: 0 
         },
         { 
-            q: "Evaluate \\( \lim_{x \to 0} \frac{\sin x - x + \frac{x^3}{6}}{x^5} \\).", 
+            q: "Evaluate \\( \\lim_{x \\to 0} \\frac{\\sin x - x + \\frac{x^3}{6}}{x^5} \\).", 
             opts: ["1/120", "1/6", "0", "1"], 
             ans: 0 
         },
@@ -547,18 +604,18 @@
             ans: 0 
         },
         { 
-            q: "If \\( u = \arctan(y/x) \\), find \\( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \\).", 
-            opts: ["0", "1", "\\( \frac{1}{x^2+y^2} \\)", "-1"], 
+            q: "If \\( u = \\arctan(y/x) \\), find \\( \\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2} \\).", 
+            opts: ["0", "1", "\\( \\frac{1}{x^2+y^2} \\)", "-1"], 
             ans: 0 
         },
         { 
-            q: "Find the derivative of \\( y = \int_0^{x^2} \sin(t) dt \\) with respect to \\( x \\).", 
-            opts: ["\\( 2x \sin(x^2) \\)", "\\( \sin(x^2) \\)", "\\( 2x \cos(x^2) \\)", "\\( \cos(x^2) \\)"], 
+            q: "Find the derivative of \\( y = \\int_0^{x^2} \\sin(t) dt \\) with respect to \\( x \\).", 
+            opts: ["\\( 2x \\sin(x^2) \\)", "\\( \\sin(x^2) \\)", "\\( 2x \\cos(x^2) \\)", "\\( \\cos(x^2) \\)"], 
             ans: 0 
         },
         { 
             q: "A particle moves with position \\( s(t) = t^3 - 6t^2 + 9t \\). Find the acceleration when the velocity is zero.", 
-            opts: ["\\( \pm 6 \\)", "0", "9", "3"], 
+            opts: ["\\( \\pm 6 \\)", "0", "9", "3"], 
             ans: 0 
         },
         { 
@@ -1433,13 +1490,14 @@
             opts: ["\\( \\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x} \\)", "\\( \\frac{\\partial M}{\\partial x} = \\frac{\\partial N}{\\partial y} \\)", "\\( \\frac{\\partial M}{\\partial y} = -\\frac{\\partial N}{\\partial x} \\)", "\\( M = N \\)"], 
             ans: 0 
         },
-      { 
-            q: "Find the Jacobian of the transformation from Cartesian coordinates \\( (x, y, z) \\) to Spherical coordinates \\( (r, \theta, \phi) \\).", 
-            opts: ["\\( r^2 \sin \theta \\)", "\\( r \sin \theta \\)", "\\( r^2 \cos \theta \\)", "\\( r \\)"], 
+  // BATCH 9 - NEW
+        { 
+            q: "Find the Jacobian of the transformation from Cartesian coordinates \\( (x, y, z) \\) to Spherical coordinates \\( (r, \\theta, \\phi) \\).", 
+            opts: ["\\( r^2 \\sin \\theta \\)", "\\( r \\sin \\theta \\)", "\\( r^2 \\cos \\theta \\)", "\\( r \\)"], 
             ans: 0 
         },
         { 
-            q: "Evaluate the Jacobian \\( \frac{\partial(x, y)}{\partial(u, v)} \\) if \\( x = u(1-v) \\) and \\( y = uv \\).", 
+            q: "Evaluate the Jacobian \\( \\frac{\\partial(x, y)}{\\partial(u, v)} \\) if \\( x = u(1-v) \\) and \\( y = uv \\).", 
             opts: ["\\( u \\)", "\\( v \\)", "\\( 1-v \\)", "\\( uv \\)"], 
             ans: 0 
         },
@@ -1449,7 +1507,7 @@
             ans: 0 
         },
         { 
-            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = \sqrt{x} \\) on the interval \\( [0, 9] \\).", 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = \\sqrt{x} \\) on the interval \\( [0, 9] \\).", 
             opts: ["2", "3", "4.5", "1"], 
             ans: 0 
         },
@@ -1459,27 +1517,27 @@
             ans: 0 
         },
         { 
-            q: "Determine the lower bound of \\( \int_0^1 \frac{1}{1+x} dx \\) using the properties of definite integrals.", 
+            q: "Determine the lower bound of \\( \\int_0^1 \\frac{1}{1+x} dx \\) using the properties of definite integrals.", 
             opts: ["0.5", "1", "0", "0.75"], 
             ans: 0 
         },
         { 
-            q: "Find the Taylor series of \\( f(x) = \sin x \\) centered at \\( a = \pi/2 \\). The first two terms are:", 
-            opts: ["\\( 1 - \frac{1}{2}(x - \pi/2)^2 \\)", "\\( (x - \pi/2) - \frac{1}{6}(x - \pi/2)^3 \\)", "\\( 1 + (x - \pi/2) \\)", "\\( 1 - (x - \pi/2) \\)"], 
+            q: "Find the Taylor series of \\( f(x) = \\sin x \\) centered at \\( a = \\pi/2 \\). The first two terms are:", 
+            opts: ["\\( 1 - \\frac{1}{2}(x - \\pi/2)^2 \\)", "\\( (x - \\pi/2) - \\frac{1}{6}(x - \\pi/2)^3 \\)", "\\( 1 + (x - \\pi/2) \\)", "\\( 1 - (x - \\pi/2) \\)"], 
             ans: 0 
         },
         { 
             q: "Find the second-order partial derivative \\( f_{yy} \\) for \\( f(x,y) = e^{x/y} \\).", 
-            opts: ["\\( \frac{x(x+2y)}{y^4} e^{x/y} \\)", "\\( \frac{x^2}{y^4} e^{x/y} \\)", "\\( -\frac{x}{y^2} e^{x/y} \\)", "\\( \frac{1}{y^2} e^{x/y} \\)"], 
+            opts: ["\\( \\frac{x(x+2y)}{y^4} e^{x/y} \\)", "\\( \\frac{x^2}{y^4} e^{x/y} \\)", "\\( -\\frac{x}{y^2} e^{x/y} \\)", "\\( \\frac{1}{y^2} e^{x/y} \\)"], 
             ans: 0 
         },
         { 
-            q: "A line integral \\( \int_C F \cdot dr \\) is independent of the path if \\( F \\) is the gradient of some scalar function \\( f \\). This means \\( F \\) is:", 
+            q: "A line integral \\( \\int_C F \\cdot dr \\) is independent of the path if \\( F \\) is the gradient of some scalar function \\( f \\). This means \\( F \\) is:", 
             opts: ["Conservative", "Solenoidal", "Rotational", "Linear"], 
             ans: 0 
         },
         { 
-            q: "Use the linearization of \\( f(x) = \sqrt[3]{x} \\) at \\( a = 8 \\) to approximate \\( \sqrt[3]{8.06} \\).", 
+            q: "Use the linearization of \\( f(x) = \\sqrt[3]{x} \\) at \\( a = 8 \\) to approximate \\( \\sqrt[3]{8.06} \\).", 
             opts: ["2.005", "2.01", "2.02", "2.002"], 
             ans: 0 
         },
@@ -1495,47 +1553,48 @@
         },
         { 
             q: "Find the total derivative of \\( w = f(x, y, z) \\) where \\( x, y, z \\) are functions of \\( t \\).", 
-            opts: ["\\( \frac{\partial f}{\partial x}\frac{dx}{dt} + \frac{\partial f}{\partial y}\frac{dy}{dt} + \frac{\partial f}{\partial z}\frac{dz}{dt} \\)", "\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} + \frac{\partial f}{\partial z} \\)", "\\( f_x + f_y + f_z \\)", "\\( \frac{df}{dt} = f_{xyz} \\)"], 
+            opts: ["\\( \\frac{\\partial f}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial f}{\\partial y}\\frac{dy}{dt} + \\frac{\\partial f}{\\partial z}\\frac{dz}{dt} \\)", "\\( \\frac{\\partial f}{\\partial x} + \\frac{\\partial f}{\\partial y} + \\frac{\\partial f}{\\partial z} \\)", "\\( f_x + f_y + f_z \\)", "\\( \\frac{df}{dt} = f_{xyz} \\)"], 
             ans: 0 
         },
         { 
-            q: "Evaluate the line integral \\( \int_C x dy \\) where \\( C \\) is the arc of the parabola \\( y = x^2 \\) from \\( (0,0) \\) to \\( (2,4) \\).", 
+            q: "Evaluate the line integral \\( \\int_C x dy \\) where \\( C \\) is the arc of the parabola \\( y = x^2 \\) from \\( (0,0) \\) to \\( (2,4) \\).", 
             opts: ["16/3", "8/3", "4", "2"], 
             ans: 0 
         },
         { 
-            q: "What is the third term of the Maclaurin series for \\( f(x) = \cos x \\)?", 
+            q: "What is the third term of the Maclaurin series for \\( f(x) = \\cos x \\)?", 
             opts: ["\\( x^4 / 24 \\)", "\\( -x^2 / 2 \\)", "\\( 1 \\)", "\\( -x^4 / 24 \\)"], 
             ans: 0 
         },
-      { 
-            q: "Compute the Jacobian determinant \\( J = \frac{\partial(u,v,w)}{\partial(x,y,z)} \\) for the identity transformation \\( u=x, v=y, w=z \\).", 
+        // BATCH 10 - NEW
+        { 
+            q: "Compute the Jacobian determinant \\( J = \\frac{\\partial(u,v,w)}{\\partial(x,y,z)} \\) for the identity transformation \\( u=x, v=y, w=z \\).", 
             opts: ["1", "0", "-1", "3"], 
             ans: 0 
         },
         { 
-            q: "In a transformation where \\( x = u + v \\) and \\( y = uv^2 \\), find the Jacobian \\( \frac{\partial(x,y)}{\partial(u,v)} \\).", 
+            q: "In a transformation where \\( x = u + v \\) and \\( y = uv^2 \\), find the Jacobian \\( \\frac{\\partial(x,y)}{\\partial(u,v)} \\).", 
             opts: ["\\( v(2u - v) \\)", "\\( v^2 - 2uv \\)", "\\( 2uv - v^2 \\)", "\\( v^2 \\)"], 
             ans: 2 
         },
         { 
-            q: "Using the Mean Value Theorem for \\( f(x) = \ln x \\) on \\( [1, e] \\), find the value of \\( c \\).", 
-            opts: ["\\( e - 1 \\)", "1", "\\( e \\)", "\\( \frac{1}{e-1} \\)"], 
+            q: "Using the Mean Value Theorem for \\( f(x) = \\ln x \\) on \\( [1, e] \\), find the value of \\( c \\).", 
+            opts: ["\\( e - 1 \\)", "1", "\\( e \\)", "\\( \\frac{1}{e-1} \\)"], 
             ans: 0 
         },
         { 
-            q: "Find the linear approximation \\( L(x) \\) of \\( f(x) = \cos x \\) at \\( a = \pi/2 \\).", 
-            opts: ["\\( -(x - \pi/2) \\)", "\\( (x - \pi/2) \\)", "0", "1"], 
+            q: "Find the linear approximation \\( L(x) \\) of \\( f(x) = \\cos x \\) at \\( a = \\pi/2 \\).", 
+            opts: ["\\( -(x - \\pi/2) \\)", "\\( (x - \\pi/2) \\)", "0", "1"], 
             ans: 0 
         },
         { 
-            q: "Determine the lower bound of \\( \int_0^1 \frac{dx}{\sqrt{1+x^4}} \\) using properties of definite integrals.", 
-            opts: ["\\( 1/\sqrt{2} \\)", "1", "0", "0.5"], 
+            q: "Determine the lower bound of \\( \\int_0^1 \\frac{dx}{\\sqrt{1+x^4}} \\) using properties of definite integrals.", 
+            opts: ["\\( 1/\\sqrt{2} \\)", "1", "0", "0.5"], 
             ans: 0 
         },
         { 
             q: "Rolle's Theorem fails for \\( f(x) = 1 - x^{2/3} \\) on \\( [-1, 1] \\) because:", 
-            opts: ["\\( f(x) \\) is not differentiable at \\( x=0 \\)", "\\( f(1) \neq f(-1) \\)", "The function is not continuous", "The interval is too large"], 
+            opts: ["\\( f(x) \\) is not differentiable at \\( x=0 \\)", "\\( f(1) \\neq f(-1) \\)", "The function is not continuous", "The interval is too large"], 
             ans: 0 
         },
         { 
@@ -1549,37 +1608,37 @@
             ans: 0 
         },
         { 
-            q: "Evaluate the line integral \\( \oint_C (y^2 dx + x^2 dy) \\) where \\( C \\) is the boundary of the square \\( 0 \le x \le 1, 0 \le y \le 1 \\).", 
+            q: "Evaluate the line integral \\( \\oint_C (y^2 dx + x^2 dy) \\) where \\( C \\) is the boundary of the square \\( 0 \\le x \\le 1, 0 \\le y \\le 1 \\).", 
             opts: ["0", "1", "2", "-1"], 
             ans: 0 
         },
         { 
             q: "The average value of \\( f(x) = x^n \\) on \\( [0, 1] \\) is:", 
-            opts: ["\\( \frac{1}{n+1} \\)", "\\( \frac{1}{n} \\)", "\\( n \\)", "\\( \frac{1}{n-1} \\)"], 
+            opts: ["\\( \\frac{1}{n+1} \\)", "\\( \\frac{1}{n} \\)", "\\( n \\)", "\\( \\frac{1}{n-1} \\)"], 
             ans: 0 
         },
         { 
-            q: "Find the total derivative \\( \frac{du}{dx} \\) of \\( u = f(x, y) \\) where \\( y = g(x) \\).", 
-            opts: ["\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \frac{dy}{dx} \\)", "\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \\)", "\\( f_x g'(x) \\)", "\\( f_y g'(x) \\)"], 
+            q: "Find the total derivative \\( \\frac{du}{dx} \\) of \\( u = f(x, y) \\) where \\( y = g(x) \\).", 
+            opts: ["\\( \\frac{\\partial f}{\\partial x} + \\frac{\\partial f}{\\partial y} \\frac{dy}{dx} \\)", "\\( \\frac{\\partial f}{\\partial x} + \\frac{\\partial f}{\\partial y} \\)", "\\( f_x g'(x) \\)", "\\( f_y g'(x) \\)"], 
             ans: 0 
         },
         { 
-            q: "What is the Jacobian for the transformation to elliptical coordinates \\( x = a r \cos \theta, y = b r \sin \theta \\)?", 
+            q: "What is the Jacobian for the transformation to elliptical coordinates \\( x = a r \\cos \\theta, y = b r \\sin \\theta \\)?", 
             opts: ["\\( abr \\)", "\\( r \\)", "\\( ab \\)", "\\( r^2 \\)"], 
             ans: 0 
         },
         { 
-            q: "A line integral of a vector field \\( \vec{F} \\) is independent of path if and only if the curl of \\( \vec{F} \\) is:", 
+            q: "A line integral of a vector field \\( \\vec{F} \\) is independent of path if and only if the curl of \\( \\vec{F} \\) is:", 
             opts: ["Zero", "One", "Constant", "Infinite"], 
             ans: 0 
         },
         { 
-            q: "Find the Maclaurin series for \\( f(x) = \frac{1}{1+x^2} \\).", 
-            opts: ["\\( 1 - x^2 + x^4 - x^6 + \dots \\)", "\\( 1 + x^2 + x^4 + \dots \\)", "\\( x - x^3 + x^5 \dots \\)", "\\( 1 - x + x^2 \dots \\)"], 
+            q: "Find the Maclaurin series for \\( f(x) = \\frac{1}{1+x^2} \\).", 
+            opts: ["\\( 1 - x^2 + x^4 - x^6 + \\dots \\)", "\\( 1 + x^2 + x^4 + \\dots \\)", "\\( x - x^3 + x^5 \\dots \\)", "\\( 1 - x + x^2 \\dots \\)"], 
             ans: 0 
         },
         { 
-            q: "The Mean Value Theorem for Integrals states there exists a \\( c \\) such that \\( f(c) = \frac{1}{b-a} \int_a^b f(x) dx \\). What is \\( f(c) \\) called?", 
+            q: "The Mean Value Theorem for Integrals states there exists a \\( c \\) such that \\( f(c) = \\frac{1}{b-a} \\int_a^b f(x) dx \\). What is \\( f(c) \\) called?", 
             opts: ["Average value", "Median value", "Stationary value", "Maximum value"], 
             ans: 0 
         },
