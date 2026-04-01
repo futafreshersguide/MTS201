@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTS 201 CBT PREP | By Ó'YẸMÍ</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #f4f4f4;
+            --success: #28a745;
+            --danger: #dc3545;
+            --dark: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 { margin: 0; font-size: 24px; }
+        header p { margin: 5px 0 0 0; font-size: 14px; font-weight: bold; color: #ffeb3b; }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .hidden { display: none !important; }
+        
+        /* Dashboard & Timer */
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+        }
+        #timer { font-size: 24px; font-weight: bold; color: var(--danger); }
+        .q-nav-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .q-nav-btn {
+            width: 35px; height: 35px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .q-nav-btn.answered { background: var(--primary); color: white; border-color: var(--primary); }
+        .q-nav-btn.active { outline: 3px solid #ffc107; font-weight: bold; }
+
+        /* Question Area */
+        .question-text { font-size: 18px; margin-bottom: 20px; line-height: 1.5; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-label {
+            display: flex; align-items: center; padding: 12px;
+            border: 1px solid #ccc; border-radius: 5px; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-label:hover { background: #f0f8ff; }
+        .option-label input { margin-right: 15px; transform: scale(1.2); }
+        
+        /* Buttons */
+        .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
+        button {
+            padding: 10px 20px; font-size: 16px; cursor: pointer;
+            border: none; border-radius: 5px; font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.8; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: #ffc107; color: var(--dark); }
+
+        /* Review Section */
+        .review-item {
+            border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px;
+        }
+        .correct-ans { color: var(--success); font-weight: bold; margin-top: 10px; }
+        .wrong-ans { color: var(--danger); font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MTS 201: Calculus & Applications CBT</h1>
+    <p>Compiled by Abideen Yakub Opeyemi (Ó'YẸMÍ) | 07050376975</p>
+</header>
+
+<div class="container" id="landing-page">
+    <h2>Welcome to your MTS 201 Prep Test</h2>
+    <p><strong>Instructions:</strong></p>
+    <ul>
+        <li>You have <strong>20 minutes</strong> to answer up to <strong>60 questions</strong>.</li>
+        <li>The system shuffles questions dynamically from the bank.</li>
+        <li>You can skip questions and return to them using the navigation grid.</li>
+        <li>You can review correct answers after submission.</li>
+    </ul>
+    <button class="btn-primary" onclick="startTest()" style="width: 100%; padding: 15px; font-size: 18px;">START TEST NOW</button>
+</div>
+
+<div class="container hidden" id="test-page">
+    <div class="dashboard">
+        <div>Question <span id="current-q-num">1</span> of <span id="total-q-num">0</span></div>
+        <div id="timer">20:00</div>
+    </div>
+    <div class="q-nav-grid" id="q-nav-grid"></div>
+    
+    <div id="question-container">
+        <div class="question-text" id="question-text">Loading...</div>
+        <div class="options" id="options-container"></div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-primary" onclick="prevQuestion()" id="btn-prev">Previous</button>
+        <button class="btn-success" onclick="submitTestConf()" id="btn-submit">Submit Test</button>
+        <button class="btn-primary" onclick="nextQuestion()" id="btn-next">Next</button>
+    </div>
+</div>
+
+<div class="container hidden" id="result-page">
+    <h2 style="text-align: center;">Test Completed!</h2>
+    <h1 style="text-align: center; font-size: 48px; color: var(--primary);" id="score-display">0/0</h1>
+    <p style="text-align: center; font-size: 18px;">Percentage: <span id="percentage-display">0%</span></p>
+    
+    <div class="btn-group" style="justify-content: center; gap: 20px;">
+        <button class="btn-warning" onclick="showReview()">Check Correct Answers</button>
+        <button class="btn-primary" onclick="location.reload()">Retake New Test</button>
+    </div>
+</div>
+
+<div class="container hidden" id="review-page">
+    <h2>Review Answers</h2>
+    <div id="review-container"></div>
+    <div class="btn-group" style="justify-content: center;">
+        <button class="btn-primary" onclick="location.reload()">Retake New Test</button>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // QUESTION BANK
+    // ==========================================
+    
+    const legacyQuestions = [
+        // ---> PASTE SET 1 & 2 (LEGACY) QUESTIONS HERE <---
+        { 
+            q: "Determine the stationary points of the function \\( z = x^2 + xy + y^2 + 5x - 5y + 3 \\)", 
+            opts: ["\\( (-5, 5) \\)", "\\( (5, -5) \\)", "\\( (0, 0) \\)", "\\( (1, -1) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Consider the function \\( z = x^3 - 3x + xy^2 \\). Which of the following is a saddle point of this function?", 
+            opts: ["\\( (1, 0) \\)", "\\( (-1, 0) \\)", "\\( (0, \\pm\\sqrt{3}) \\)", "\\( (0, 0) \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "From the function \\( z = x^3 - 3x + xy^2 \\), determine the local minimum point.", 
+            opts: ["\\( (0, \\pm\\sqrt{3}) \\)", "\\( (1, 0) \\)", "\\( (-1, 0) \\)", "\\( (3, 0) \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "For the function \\( z = x^4 + 4x^2y^2 - 2x^2 + 2y^2 - 1 \\), what are the turning points?", 
+            opts: ["\\( (0, 0) \\) only", "\\( (1, 0) \\) and \\( (-1, 0) \\)", "\\( (2, 0) \\) and \\( (-2, 0) \\)", "None of the above"], 
+            ans: 1 
+        },
+        { 
+            q: "Given a Taylor series expansion of \\( f(x, y) = \\tan^{-1}\\left(\\frac{y}{x}\\right) \\), evaluate the first partial derivative \\( f_x \\) at the point \\( (1, 1) \\).", 
+            opts: ["-1/2", "1/2", "0", "1"], 
+            ans: 1 
+        },
+        { 
+            q: "Using the function \\( f(x, y) = \\tan^{-1}\\left(\\frac{y}{x}\\right) \\), evaluate the mixed partial derivative \\( f_{xy} \\) at the point \\( (1, 1) \\).", 
+            opts: ["1/2", "-1/2", "1", "0"], 
+            ans: 3 
+        },
+        { 
+            q: "Given \\( Z = e^{xy^2} \\), find \\( \\frac{\\partial Z}{\\partial t} \\) if \\( x = t\\cos(t) \\) and \\( y = \\sin(t) \\), evaluated at \\( t = \\frac{\\pi}{2} \\).", 
+            opts: ["\\( \\pi^3 / 8 \\)", "\\( -\\pi^3 / 8 \\)", "\\( \\pi^2 / 4 \\)", "\\( -\\pi^2 / 4 \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Consider the implicit function \\( x^2 + y^2 + z^2 = 25 \\). Find \\( \\frac{\\partial z}{\\partial x} \\).", 
+            opts: ["\\( x/z \\)", "\\( -x/z \\)", "\\( -y/z \\)", "\\( y/z \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( z = x^2\\tan^{-1}\\left(\\frac{y}{x}\\right) \\), find the mixed second partial derivative \\( \\frac{\\partial^2 z}{\\partial x \\partial y} \\).", 
+            opts: ["1", "0", "x/y", "y/x"], 
+            ans: 0 
+        },
+        { 
+            q: "Given \\( y = xe^{-x} \\), find the approximate change in \\( y \\) (\\( \\delta y \\)) if \\( x \\) changes from 5 to 5.3.", 
+            opts: ["-0.000809", "-0.0809", "-0.00809", "0.00809"], 
+            ans: 2 
+        },
+        { 
+            q: "A cone has a radius \\( r = 10 \\text{ cm} \\) and a height \\( h = 25 \\text{ cm} \\). If the change in both radius and height is \\( 0.1 \\text{ cm} \\), find the approximate change in its volume in terms of \\( \\pi \\).", 
+            opts: ["\\( 10\\pi \\)", "\\( 15\\pi \\)", "\\( 20\\pi \\)", "\\( 25\\pi \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "A right-angled triangle has sides \\( a \\) and \\( b \\), and hypotenuse \\( h \\). If there is a \\( \\pm 0.5\\% \\) error in measuring \\( a \\) and \\( b \\), find the percentage error in the area.", 
+            opts: ["\\( \\pm 0.25\\% \\)", "\\( \\pm 0.5\\% \\)", "\\( \\pm 1.0\\% \\)", "\\( \\pm 2.0\\% \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( z = x^2 + 3xy - y^2 \\), find the approximate change in \\( z \\) when \\( x \\) changes from 2 to 2.05 and \\( y \\) changes from 3 to 2.96.", 
+            opts: ["0.45", "0.65", "0.85", "1.05"], 
+            ans: 1 
+        },
+        { 
+            q: "Given \\( y = \\frac{kwd^9}{t^3} \\). If \\( w \\) increases by 3%, \\( d \\) increases by 2.5%, and \\( t \\) increases by 4%, find the percentage change in \\( y \\).", 
+            opts: ["Increases by 13.5%", "Increases by 18%", "Decreases by 18%", "Increases by 21.5%"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( y = xe^{-x} \\) and \\( x \\) experiences a 2% change, at what value of \\( x \\) will there be no change in \\( y \\)?", 
+            opts: ["\\( x = 0 \\)", "\\( x = 1 \\)", "\\( x = -1 \\)", "\\( x = e \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Let \\( y = x^2\\sin(x) \\). If \\( x = 3 \\) and it undergoes a small change of \\( \\delta x = 0.06 \\), estimate the change in \\( y \\).", 
+            opts: ["0.224", "0.558", "0.886", "1.112"], 
+            ans: 1 
+        },
+        { 
+            q: "Given \\( y = \\cos(3x^2 + 2) \\), if \\( x \\) changes by 2%, estimate the percentage change in \\( y \\).", 
+            opts: ["\\( -6x^2\\tan(3x^2 + 2)\\% \\)", "\\( -12x^2\\tan(3x^2 + 2)\\% \\)", "\\( 12x^2\\cot(3x^2 + 2)\\% \\)", "\\( 6x^2\\sin(3x^2 + 2)\\% \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Estimate the value of \\( (26)^{1/3} \\) as a rational number using linear approximation.", 
+            opts: ["2.86296", "2.96296", "3.06296", "3.16296"], 
+            ans: 1 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) if \\( 4xy^2 + y^2 = 5 \\)", 
+            opts: ["\\( \\frac{-2y}{4x + 1} \\)", "\\( \\frac{2y}{4x + 1} \\)", "\\( \\frac{-4y}{2x + 1} \\)", "\\( \\frac{y}{4x - 1} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) if \\( x^2y + 3xy^2 + y^2 = 5 \\)", 
+            opts: ["\\( \\frac{-2xy - 3y^2}{x^2 + 6xy + 2y} \\)", "\\( \\frac{2xy + 3y^2}{x^2 + 6xy + 2y} \\)", "\\( \\frac{-xy - y^2}{x^2 + 3xy + y} \\)", "\\( \\frac{-2xy + 3y^2}{x^2 - 6xy + 2y} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate \\( \\lim_{x \\to \\infty} \\frac{\\sin x}{x} \\)", 
+            opts: ["1", "\\( \\infty \\)", "0", "Undefined"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate \\( \\lim_{\\theta \\to 0} \\frac{\\tan \\theta}{\\theta} \\)", 
+            opts: ["0", "1", "\\( \\infty \\)", "-1"], 
+            ans: 1 
+        },
+        { 
+            q: "What is the Maclaurin series expansion of \\( e^x \\)?", 
+            opts: ["\\( 1 - x + \\frac{x^2}{2!} - \\frac{x^3}{3!} \\)", "\\( 1 + x + \\frac{x^2}{2!} + \\frac{x^3}{3!} + \\frac{x^4}{4!} \\)", "\\( x - \\frac{x^3}{3!} + \\frac{x^5}{5!} \\)", "\\( 1 + \\frac{x^2}{2!} + \\frac{x^4}{4!} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the slope of the tangent to the curve \\( yx^3 - 3x^2y^2 + x^3 - 2x = 0 \\) at the point \\( x=2, y=1 \\).", 
+            opts: ["5/8", "-5/8", "3/8", "-3/8"], 
+            ans: 0 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) if \\( x = a\\cos\\theta \\) and \\( y = b\\sin\\theta \\)", 
+            opts: ["\\( \\frac{b}{a}\\tan\\theta \\)", "\\( -\\frac{b}{a}\\tan\\theta \\)", "\\( -\\frac{b}{a}\\cot\\theta \\)", "\\( \\frac{b}{a}\\cot\\theta \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "If the radius of a sphere is changing at the rate of \\( 2\\text{cm/sec} \\), at what rate is its volume changing when the radius is \\( 7\\text{cm} \\)? (Take \\( \\pi = 22/7 \\))", 
+            opts: ["616 cm³/sec", "1232 cm³/sec", "2464 cm³/sec", "308 cm³/sec"], 
+            ans: 1 
+        },
+        { 
+            q: "A body moves in a straight line so that the distance \\( s \\) ft. travelled after time \\( t \\) sec is given by \\( s = t^3 - 4t^2 + 4t \\). Find the two positions of the particle when it is momentarily at rest.", 
+            opts: ["0 ft and 32/27 ft", "1 ft and 16/9 ft", "0 ft and 8/3 ft", "2 ft and 32/27 ft"], 
+            ans: 0 
+        },
+        { 
+            q: "Given that \\( y = 2x^3 - 3x^2 - 12x + 3 \\), find the range of values of \\( x \\) for which \\( \\frac{dy}{dx} < 0 \\).", 
+            opts: ["\\( x < -1 \\) or \\( x > 2 \\)", "\\( -2 < x < 1 \\)", "\\( -1 < x < 2 \\)", "\\( -1 \\le x \\le 2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Suppose \\( p, d, h \\) and \\( w \\) are connected by \\( p = w^2hd \\). If errors up to \\( \\pm 1\\% \\) are possible in the measurement of \\( w, h \\) and \\( d \\), find the maximum % error in the measurement of \\( p \\).", 
+            opts: ["1%", "2%", "3%", "4%"], 
+            ans: 3 
+        },
+        { 
+            q: "Evaluate \\( \\int \\frac{2x^2 + 11}{x^2 + 4} dx \\)", 
+            opts: ["\\( 2x + \\frac{3}{2}\\tan^{-1}\\left(\\frac{x}{2}\\right) + C \\)", "\\( x^2 + \\frac{3}{2}\\tan^{-1}\\left(\\frac{x}{2}\\right) + C \\)", "\\( 2x + 3\\tan^{-1}\\left(\\frac{x}{2}\\right) + C \\)", "\\( 2x + \\frac{3}{4}\\tan^{-1}\\left(\\frac{x}{2}\\right) + C \\)"], 
+            ans: 0 
+        },
+{ 
+            q: "Evaluate the line integral \\( \\int_c 4x^3 ds \\) where c is the line segment from \\( (-2,-1) \\) to \\( (1,2) \\).", 
+            opts: ["\\( -15\\sqrt{2} \\)", "\\( 15\\sqrt{2} \\)", "\\( -30 \\)", "\\( 30\\sqrt{2} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = (x^2+y^2)^2 - 2(x^2-y^2) + 1 \\), find \\( f_{xx} \\).", 
+            opts: ["\\( 4x^3 + 4xy^2 - 4x \\)", "\\( 12x^2 + 4y^2 - 4 \\)", "\\( 12x^2 + 12y^2 - 4 \\)", "\\( 8x^2 + 4y^2 - 2 \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "What is the stationary point of \\( x^2 + y^2 + 6x + 12 \\)?", 
+            opts: ["\\( (3, 0) \\)", "\\( (-3, 0) \\)", "\\( (0, -3) \\)", "\\( (-3, 3) \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "The distance of a body in meters is given by \\( s = t^4 - 14t^3 + 60t^2 + 60t \\). Find the maximum velocity.", 
+            opts: ["120 m/s", "144 m/s", "164 m/s", "180 m/s"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the value of \\( \\lim_{x \\to 3} \\frac{x^2 - 2x - 3}{x - 3} \\).", 
+            opts: ["0", "1", "4", "\\( \\infty \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate \\( \\lim_{x \\to 0} \\frac{\\sin(3x)}{-x} \\).", 
+            opts: ["3", "-3", "1/3", "-1/3"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the approximate change \\( \\delta y \\) if \\( y = x^2\\sin(x) \\).", 
+            opts: ["\\( (2x\\sin x - x^2\\cos x)\\delta x \\)", "\\( (x^2\\cos x)\\delta x \\)", "\\( (2x\\sin x + x^2\\cos x)\\delta x \\)", "\\( (2x\\cos x + x^2\\sin x)\\delta x \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( z = x^2 + 3xy + 5y^2 \\), \\( x = \\sin t \\) and \\( y = \\cos t \\). Find \\( \\frac{dz}{dt} \\).", 
+            opts: ["\\( 3\\cos(2t) - 4\\sin(2t) \\)", "\\( 3\\sin(2t) + 4\\cos(2t) \\)", "\\( 2\\cos(2t) - 3\\sin(2t) \\)", "\\( 4\\cos(2t) - 3\\sin(2t) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate \\( \\lim_{(x,y) \\to (1,2)} x^3y^2 - x^2y + x^2 - 2x + 3y \\).", 
+            opts: ["5", "7", "9", "11"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( f(x,y) = 2x^2y^3 - 3xy^2 + 2x^2 + 3y^2 + 1 \\), find \\( \\frac{\\partial f}{\\partial y} \\).", 
+            opts: ["\\( 6x^2y^2 - 6xy + 6y \\)", "\\( 4xy^3 - 3y^2 + 4x \\)", "\\( 6x^2y^2 - 3xy + 3y \\)", "\\( 2x^2y^2 - 6xy + 6 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "What is \\( f_{xx} \\) evaluated at \\( (0,0) \\) if \\( f(x,y) = (x^2+y^2)^2 - 2(x^2-y^2) + 1 \\)?", 
+            opts: ["0", "2", "-4", "4"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( z = e^x\\sin y \\), find the third partial derivative \\( f_{xyy} \\) evaluated at \\( (0,0) \\).", 
+            opts: ["-1", "0", "1", "e"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( z = e^x\\cos y \\), find \\( f_{xyy} \\) at \\( (0,0) \\).", 
+            opts: ["-1", "0", "1", "e"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = e^{xy^2} + x^3y \\), find \\( f_{xx} \\) at \\( (0, -2) \\).", 
+            opts: ["0", "8", "16", "-16"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( z = \\cos x\\cos y \\), find the fourth partial derivative \\( z_{yyyy} \\).", 
+            opts: ["\\( \\sin x\\sin y \\)", "\\( -\\cos x\\cos y \\)", "\\( \\cos x\\cos y \\)", "\\( -\\sin x\\sin y \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the first few terms of the Maclaurin expansion of \\( e^x\\cos x \\).", 
+            opts: ["\\( 1 + x + \\frac{x^2}{2} + \\frac{x^3}{3} \\dots \\)", "\\( 1 + x - \\frac{x^3}{3} - \\frac{x^4}{6} \\dots \\)", "\\( 1 - x + \\frac{x^2}{2} - \\frac{x^4}{4} \\dots \\)", "\\( 1 + x^2 - \\frac{x^3}{6} \\dots \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the triple integral \\( \\int_{1}^{2} \\int_{0}^{1} \\int_{0}^{x^2-y^2+2} dz dy dx \\).", 
+            opts: ["2", "4", "6", "8"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( f(x) = (x^2 - 1)(2x + 3) \\), find \\( f(2t - 1) \\).", 
+            opts: ["\\( 4t(t-1)(4t+1) \\)", "\\( 2t(t+1)(4t-1) \\)", "\\( 4t^2(t-1) \\)", "\\( t(2t-1)(4t+3) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Which statement about a real-valued function \\( f(x) \\) is correct?", 
+            opts: ["The domain must be only positive real numbers.", "The codomain can be a complex number set.", "The output of \\( f(x) \\) must always be a real number for every input \\( x \\).", "A real-valued function cannot have a domain of all real numbers."], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( y = (2x+1)^5 \\), determine approximately the percentage change in \\( y \\) when \\( x \\) increases by \\( 0.1\\% \\).", 
+            opts: ["\\( \\frac{x}{2x+1}\\% \\)", "\\( \\frac{2x}{2x+1}\\% \\)", "\\( \\frac{5x}{2x+1}\\% \\)", "\\( \\frac{x^2}{2x+1}\\% \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "From the function \\( z = x^2 + xy + y^2 + 5x - 5y + 3 \\), what is the nature of the stationary point \\( (-5, 5) \\)?", 
+            opts: ["Maximum point", "Minimum point", "Saddle point", "Inflection point"], 
+            ans: 1 
+        },
+      { 
+            q: "If \\( f(x,y) = \\sin(x^2 + y) \\), find the partial derivative \\( f_x \\).", 
+            opts: ["\\( 2x\\cos(x^2+y) \\)", "\\( \\cos(x^2+y) \\)", "\\( -2x\\cos(x^2+y) \\)", "\\( 2x\\sin(x^2+y) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) evaluated at \\( (3,4) \\) for the implicitly defined circle \\( x^2 + y^2 = 25 \\).", 
+            opts: ["-3/4", "3/4", "-4/3", "4/3"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit using L'Hôpital's Rule: \\( \\lim_{x \\to 0} \\frac{1 - \\cos x}{x^2} \\).", 
+            opts: ["1", "0", "1/2", "-1/2"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the minimum value of the function \\( f(x) = x^2 - 4x + 5 \\).", 
+            opts: ["1", "2", "5", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "The volume of a cube is increasing at a rate of \\( 300 \\text{ cm}^3/\\text{s} \\). At what rate is the length of an edge changing when the edge is \\( 10 \\text{ cm} \\)?", 
+            opts: ["\\( 1 \\text{ cm/s} \\)", "\\( 2 \\text{ cm/s} \\)", "\\( 3 \\text{ cm/s} \\)", "\\( 10 \\text{ cm/s} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Which of the following represents the Maclaurin series for \\( \\sin x \\)?", 
+            opts: ["\\( x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots \\)", "\\( 1 - \\frac{x^2}{2!} + \\frac{x^4}{4!} - \\dots \\)", "\\( x + \\frac{x^3}{3!} + \\frac{x^5}{5!} + \\dots \\)", "\\( 1 + x + \\frac{x^2}{2!} + \\dots \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the definite integral \\( \\int_0^{\\pi/2} \\cos x \\, dx \\).", 
+            opts: ["1", "0", "-1", "\\( \\pi/2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int x e^{x^2} \\, dx \\).", 
+            opts: ["\\( \\frac{1}{2}e^{x^2} + C \\)", "\\( e^{x^2} + C \\)", "\\( 2e^{x^2} + C \\)", "\\( \\frac{1}{2}xe^{x^2} + C \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "The radius of a circle is measured to be \\( 5 \\text{ cm} \\) with a possible error of \\( 0.1 \\text{ cm} \\). Use differentials to approximate the maximum error in the calculated area.", 
+            opts: ["\\( \\pi \\text{ cm}^2 \\)", "\\( 2\\pi \\text{ cm}^2 \\)", "\\( 0.5\\pi \\text{ cm}^2 \\)", "\\( 5\\pi \\text{ cm}^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = x^3 y^2 \\), find the mixed partial derivative \\( f_{xy} \\).", 
+            opts: ["\\( 6x^2 y \\)", "\\( 3x^2 y^2 \\)", "\\( 2x^3 y \\)", "\\( 6xy \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Find the third-order partial derivative \\( \\frac{\\partial^3 z}{\\partial y \\partial x^2} \\) for \\( z = x^3 e^{2y} \\).", 
+            opts: ["\\( 12x e^{2y} \\)", "\\( 6x e^{2y} \\)", "\\( 12x^2 e^{2y} \\)", "\\( 6x^2 e^{2y} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( u = \sin(x + ct) \\), show that \\( \frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2} \\). This is an example of what type of equation?", 
+            opts: ["Laplace Equation", "Wave Equation", "Heat Equation", "Poisson Equation"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the total differential \\( dz \\) for the function \\( z = x^2 y + \sin(xy) \\).", 
+            opts: ["\\( (2xy + y\cos xy)dx + (x^2 + x\cos xy)dy \\)", "\\( (2xy)dx + (x^2)dy \\)", "\\( (2x + \cos y)dx + (2y + \cos x)dy \\)", "\\( y^2 dx + x^2 dy \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Using the method of logarithmic differentiation from Stroud, find \\( \frac{dy}{dx} \\) if \\( y = \frac{(x+1)^2 \sqrt{x-2}}{(x+3)^3} \\).", 
+            opts: ["\\( y[\frac{2}{x+1} + \frac{1}{2(x-2)} - \frac{3}{x+3}] \\)", "\\( y[\frac{1}{x+1} + \frac{1}{x-2} + \frac{1}{x+3}] \\)", "\\( \frac{2}{x+1} - \frac{3}{x+3} \\)", "\\( y[\ln(x+1) + \ln(x-2)] \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Find the partial derivative \\( f_{xyz} \\) for the function \\( f(x,y,z) = e^{xyz} \\).", 
+            opts: ["\\( (1 + 3xyz + x^2y^2z^2)e^{xyz} \\)", "\\( (1 + xyz)e^{xyz} \\)", "\\( xyze^{xyz} \\)", "\\( (x+y+z)e^{xyz} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( V = IR \\), use total differentials to find the change \\( dV \\) if \\( I \\) changes by \\( dI \\) and \\( R \\) changes by \\( dR \\).", 
+            opts: ["\\( R dI + I dR \\)", "\\( dI + dR \\)", "\\( IR(dI + dR) \\)", "\\( \frac{dI}{I} + \frac{dR}{R} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int \\frac{dx}{x\ln x} \\).", 
+            opts: ["\\( \ln(\ln x) + C \\)", "\\( (\ln x)^2 + C \\)", "\\( \frac{1}{\ln x} + C \\)", "\\( \ln x + C \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the nth derivative \\( y^{(n)} \\) of \\( y = e^{ax} \\).", 
+            opts: ["\\( a^n e^{ax} \\)", "\\( n a e^{ax} \\)", "\\( e^{ax} \\)", "\\( a e^{nax} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the stationary point of the function \\( f(x,y) = x^2 - 4xy + y^3 + 4y \\).", 
+            opts: ["\\( (4, 2) \\)", "\\( (2, 4) \\)", "\\( (0, 0) \\)", "\\( (1, 1) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the Taylor series of \\( f(x) = \frac{1}{x} \\) centered at \\( a = 1 \\). The first three terms are:", 
+            opts: ["\\( 1 - (x-1) + (x-1)^2 \\)", "\\( 1 + (x-1) + (x-1)^2 \\)", "\\( (x-1) - (x-1)^2 \\)", "\\( 1 - x + x^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate \\( \\int_0^1 \int_0^x (x+y) dy dx \\).", 
+            opts: ["1/2", "2/3", "1/3", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the total derivative \\( \frac{dz}{dx} \\) if \\( z = x^2 + y^3 \\) and \\( y = \sin x \\).", 
+            opts: ["\\( 2x + 3\sin^2 x \cos x \\)", "\\( 2x + 3y^2 \\)", "\\( 2x + 3\sin^2 x \\)", "\\( 2x \cos x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the radius of curvature \\( \rho \\) for the curve \\( y = e^x \\) at the point \\( (0,1) \\).", 
+            opts: ["\\( 2\sqrt{2} \\)", "\\( \sqrt{2} \\)", "2", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Which of the following is the condition for a function \\( f(x,y) \\) to have a local maximum at \\( (a,b) \\)?", 
+            opts: ["\\( f_{xx}f_{yy} - f_{xy}^2 > 0 \\) and \\( f_{xx} < 0 \\)", "\\( f_{xx}f_{yy} - f_{xy}^2 > 0 \\) and \\( f_{xx} > 0 \\)", "\\( f_{xx}f_{yy} - f_{xy}^2 < 0 \\)", "\\( f_{xx} = 0 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate \\( \lim_{x \to 0} \frac{\sin x - x + \frac{x^3}{6}}{x^5} \\).", 
+            opts: ["1/120", "1/6", "0", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "The error in measuring the side of a cube is 2%. Find the percentage error in its surface area.", 
+            opts: ["4%", "2%", "6%", "8%"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( u = \arctan(y/x) \\), find \\( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \\).", 
+            opts: ["0", "1", "\\( \frac{1}{x^2+y^2} \\)", "-1"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the derivative of \\( y = \int_0^{x^2} \sin(t) dt \\) with respect to \\( x \\).", 
+            opts: ["\\( 2x \sin(x^2) \\)", "\\( \sin(x^2) \\)", "\\( 2x \cos(x^2) \\)", "\\( \cos(x^2) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "A particle moves with position \\( s(t) = t^3 - 6t^2 + 9t \\). Find the acceleration when the velocity is zero.", 
+            opts: ["\\( \pm 6 \\)", "0", "9", "3"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the second derivative \\( \frac{d^2y}{dx^2} \\) at \\( t = \pi/4 \\) for the parametric curve \\( x = 2\cos t, y = 2\sin t \\).", 
+            opts: ["\\( -\sqrt{2} \\)", "\\( -1/2 \\)", "\\( -2\sqrt{2} \\)", "\\( -1 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = x^y \\), find the partial derivative \\( f_y \\).", 
+            opts: ["\\( yx^{y-1} \\)", "\\( x^y \ln x \\)", "\\( x^y \ln y \\)", "\\( y \ln x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "A rectangular block has dimensions \\( x=10, y=12, z=15 \\). If each dimension increases by 0.1, find the approximate increase in volume \\( \delta V \\).", 
+            opts: ["51", "5.1", "510", "0.51"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the second total derivative \\( \frac{d^2y}{dx^2} \\) for \\( x^2 + y^2 = r^2 \\) using the formula \\( -\frac{f_{xx}f_y^2 - 2f_{xy}f_xf_y + f_{yy}f_x^2}{f_y^3} \\).", 
+            opts: ["\\( -r^2/y^3 \\)", "\\( r^2/y^3 \\)", "\\( -x/y \\)", "\\( 1/y^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the linearization \\( L(x) \\) of \\( f(x) = \tan x \\) at \\( a = \pi/4 \\).", 
+            opts: ["\\( 1 + 2(x - \pi/4) \\)", "\\( 1 + (x - \pi/4) \\)", "\\( \sqrt{2} + 2(x - \pi/4) \\)", "\\( 1 - 2(x - \pi/4) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( z = \phi(x + ay) + \psi(x - ay) \\), where \\( \phi \\) and \\( \psi \\) are arbitrary functions, show that \\( \frac{\partial^2 z}{\partial y^2} = \\)", 
+            opts: ["\\( a^2 \frac{\partial^2 z}{\partial x^2} \\)", "\\( \frac{1}{a^2} \frac{\partial^2 z}{\partial x^2} \\)", "\\( a \frac{\partial^2 z}{\partial x^2} \\)", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "Using Leibniz's Theorem, find the 2nd derivative of \\( y = x^2 \sin x \\).", 
+            opts: ["\\( 2\sin x + 4x\cos x - x^2\sin x \\)", "\\( x^2\cos x + 2x\sin x \\)", "\\( 2\cos x - x^2\sin x \\)", "\\( 4x\cos x - x^2\sin x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit: \\( \lim_{x \to 0} \frac{x - \sin x}{x^3} \\).", 
+            opts: ["1/6", "0", "1/3", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the total derivative \\( \frac{du}{dx} \\) if \\( u = x^2 + y^2 \\) and \\( y = \ln x \\).", 
+            opts: ["\\( 2x + \frac{2\ln x}{x} \\)", "\\( 2x + 2y \\)", "\\( 2x + \frac{1}{x} \\)", "\\( \frac{2x + 2y}{x} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the work done in moving a particle in the force field \\( F = 3x^2 i + (2xz - y) j + z k \\) along the straight line from \\( (0,0,0) \\) to \\( (2,1,3) \\).", 
+            opts: ["16", "12", "18", "20"], 
+            ans: 0 
+        },
+        { 
+            q: "The volume of a right circular cone is \\( V = \frac{1}{3}\pi r^2 h \\). If the height is kept constant, find the rate of change of volume with respect to the radius.", 
+            opts: ["\\( \frac{2}{3}\pi rh \\)", "\\( \frac{1}{3}\pi r^2 \\)", "\\( 2\pi rh \\)", "\\( \pi r^2 h \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Given \\( y = \\sqrt{x} \\), use differentials to approximate the change in \\( y \\) (\\( \\delta y \\)) when \\( x \\) changes from 100 to 102.", 
+            opts: ["0.1", "0.2", "0.01", "0.02"], 
+            ans: 0 
+        },
+        { 
+            q: "A company's profit is given by \\( P(x) = -x^2 + 10x - 20 \\) (in thousands of Naira), where \\( x \\) is the number of items sold. What is the maximum profit?", 
+            opts: ["₦5,000", "₦10,000", "₦20,000", "₦25,000"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate \\( \\lim_{x \\to \\infty} \\frac{3x^2 - 5x}{2x^2 + 1} \\).", 
+            opts: ["3/2", "0", "\\( \\infty \\)", "-5"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( y = \\ln(x^2 + 1) \\), find the second derivative \\( y'' \\).", 
+            opts: ["\\( \\frac{2(1-x^2)}{(x^2+1)^2} \\)", "\\( \\frac{2x}{x^2+1} \\)", "\\( \\frac{2}{(x^2+1)^2} \\)", "\\( \\frac{-2x}{(x^2+1)^2} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "The cost function is \\( C(x) = 100 + 5x + 0.01x^2 \\). Find the marginal cost at a production level of \\( x = 100 \\).", 
+            opts: ["7", "5", "2", "10"], 
+            ans: 0 
+        },
+      { 
+            q: "Evaluate the limit at infinity: \\( \\lim_{x \\to \\infty} \\frac{5x^3 - 2x + 1}{x^3 + 4x^2} \\).", 
+            opts: ["0", "1", "5", "\\( \\infty \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int \\sin(3x) \\, dx \\).", 
+            opts: ["\\( \\frac{1}{3}\\cos(3x) + C \\)", "\\( -\\frac{1}{3}\\cos(3x) + C \\)", "\\( -3\\cos(3x) + C \\)", "\\( 3\\cos(3x) + C \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Which of the following represents the Maclaurin series for \\( \\cos x \\)?", 
+            opts: ["\\( 1 - \\frac{x^2}{2!} + \\frac{x^4}{4!} - \\dots \\)", "\\( x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots \\)", "\\( 1 + x + \\frac{x^2}{2!} + \\dots \\)", "\\( 1 - x^2 + x^4 - \\dots \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the definite integral \\( \\int_1^e \\frac{1}{x} \\, dx \\).", 
+            opts: ["e", "0", "1", "\\( e-1 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the derivative \\( \\frac{dy}{dx} \\) if \\( y = e^{\\sin x} \\).", 
+            opts: ["\\( e^{\\cos x} \\)", "\\( \\sin x \\cdot e^{\\sin x - 1} \\)", "\\( e^{\\sin x}\\cos x \\)", "\\( -e^{\\sin x}\\cos x \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the volume of the solid of revolution generated by rotating \\( y = x \\) around the x-axis from \\( x = 0 \\) to \\( x = 2 \\).", 
+            opts: ["\\( 2\\pi \\)", "\\( \\frac{8\\pi}{3} \\)", "\\( 4\\pi \\)", "\\( \\frac{4\\pi}{3} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Using the Fundamental Theorem of Calculus, evaluate \\( \\frac{d}{dx} \\int_0^x \\sqrt{t^2+1} \\, dt \\).", 
+            opts: ["\\( \\frac{x}{\\sqrt{x^2+1}} \\)", "\\( \\frac{1}{2\\sqrt{x^2+1}} \\)", "\\( x^2+1 \\)", "\\( \\sqrt{x^2+1} \\)"], 
+            ans: 3 
+        },
+        { 
+            q: "Find the minimum value of the function \\( y = x^2 - 6x + 9 \\).", 
+            opts: ["0", "3", "9", "-9"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( f(x,y) = \\ln(xy) \\), find the partial derivative \\( f_y \\).", 
+            opts: ["\\( \\frac{1}{xy} \\)", "\\( \\frac{x}{y} \\)", "\\( \\frac{1}{y} \\)", "\\( \\frac{1}{x} \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) by implicit differentiation if \\( x^3 + y^3 = 8 \\).", 
+            opts: ["\\( -\\frac{x^2}{y^2} \\)", "\\( \\frac{x^2}{y^2} \\)", "\\( -\\frac{y^2}{x^2} \\)", "\\( -\\frac{3x^2}{y^2} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "The radius of a circle is measured to be \\( 10 \\text{ cm} \\) with a possible error of \\( 0.2 \\text{ cm} \\). Find the maximum approximate error in calculating the circumference.", 
+            opts: ["\\( 0.4\\pi \\text{ cm} \\)", "\\( 0.2\\pi \\text{ cm} \\)", "\\( 4\\pi \\text{ cm} \\)", "\\( 2\\pi \\text{ cm} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit using L'Hôpital's Rule: \\( \\lim_{x \\to 0} \\frac{e^x - 1}{x} \\).", 
+            opts: ["0", "\\( e \\)", "1", "\\( \\infty \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the derivative of \\( y = \\tan^{-1}(2x) \\).", 
+            opts: ["\\( \\frac{1}{1+4x^2} \\)", "\\( \\frac{2}{1+4x^2} \\)", "\\( \\frac{2}{1+2x^2} \\)", "\\( \\frac{-2}{1+4x^2} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "The revenue function is \\( R(x) = 50x - 0.5x^2 \\). Find the marginal revenue when \\( x = 10 \\).", 
+            opts: ["40", "45", "50", "10"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int \\frac{1}{x^2+1} \\, dx \\).", 
+            opts: ["\\( \\ln(x^2+1) + C \\)", "\\( \\sin^{-1}(x) + C \\)", "\\( \\tan^{-1}(x) + C \\)", "\\( \\frac{-2x}{(x^2+1)^2} + C \\)"], 
+            ans: 2 
+        },
+      { 
+            q: "Find the derivative \\( \\frac{dy}{dx} \\) if \\( y = x^2 \\ln x \\).", 
+            opts: ["\\( 2x \\ln x + x \\)", "\\( x(2\\ln x + 1) \\)", "\\( 2x \\)", "\\( 2x \\ln x - x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int \\sec^2(4x) \\, dx \\).", 
+            opts: ["\\( 4\\tan(4x) + C \\)", "\\( \\frac{1}{4}\\tan(4x) + C \\)", "\\( \\tan(4x) + C \\)", "\\( \\frac{1}{4}\\sec(4x)\\tan(4x) + C \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to 2} \\frac{x^2 - 4}{x^2 - 5x + 6} \\).", 
+            opts: ["0", "4", "-4", "\\( \\infty \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "A rectangular garden is to be fenced using 100m of fencing. What is the maximum possible area of the garden?", 
+            opts: ["10000 m²", "2500 m²", "625 m²", "400 m²"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( f(x,y) = x^4 \\cos y + y^2 \\sin x \\), find the mixed partial derivative \\( f_{xy} \\).", 
+            opts: ["\\( -x^4 \\sin y + 2y \\cos x \\)", "\\( -4x^3 \\sin y + 2y \\cos x \\)", "\\( 4x^3 \\sin y + 2y \\cos x \\)", "\\( -4x^3 \\cos y - 2y \\sin x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the definite integral \\( \\int_0^1 (3x^2 - 2x + 1) \\, dx \\).", 
+            opts: ["0", "1", "2", "3"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the integral using substitution: \\( \\int 2x \\sqrt{x^2 + 1} \\, dx \\).", 
+            opts: ["\\( \\frac{2}{3}(x^2+1)^{3/2} + C \\)", "\\( \\frac{3}{2}(x^2+1)^{3/2} + C \\)", "\\( \\sqrt{x^2+1} + C \\)", "\\( (x^2+1)^{3/2} + C \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the area bounded between the curves \\( y = x^2 \\) and \\( y = x \\).", 
+            opts: ["1/2", "1/3", "1/6", "1/4"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the differential \\( dy \\) if \\( y = \\frac{1}{x^2} \\).", 
+            opts: ["\\( -2x^{-3} dx \\)", "\\( 2x^{-3} dx \\)", "\\( -x^{-3} dx \\)", "\\( -2x^{-1} dx \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the approximate percentage error in the volume of a cube if there is a 1% error in measuring its side length.", 
+            opts: ["1%", "2%", "3%", "4%"], 
+            ans: 2 
+        },
+        { 
+            q: "What is the first non-zero term in the Maclaurin series expansion for \\( \\tan x \\)?", 
+            opts: ["1", "\\( x \\)", "\\( x^2 \\)", "\\( x^3/3 \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the Taylor series expansion for \\( \\frac{1}{1-x} \\) centered at \\( x = 0 \\).", 
+            opts: ["\\( 1 - x + x^2 - x^3 + \\dots \\)", "\\( 1 + x + x^2 + x^3 + \\dots \\)", "\\( 1 + 2x + 3x^2 + \\dots \\)", "\\( x - x^2 + x^3 - \\dots \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to \\infty} \\frac{e^x}{x^2} \\).", 
+            opts: ["0", "1", "2", "\\( \\infty \\)"], 
+            ans: 3 
+        },
+        { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to 0} \\frac{\\sin 5x}{2x} \\).", 
+            opts: ["0", "5/2", "2/5", "1"], 
+            ans: 1 
+        },
+        { 
+            q: "Determine the nature of the stationary point of \\( y = x^3 - 3x^2 \\) at \\( x = 2 \\).", 
+            opts: ["Maximum", "Minimum", "Point of Inflection", "Saddle point"], 
+            ans: 1 
+        },
+      { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to 0} \\frac{\\sin 4x}{\\sin 2x} \\).", 
+            opts: ["1/2", "2", "4", "0"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the derivative with respect to \\( x \\) of \\( y = \\ln(\\sec x + \\tan x) \\).", 
+            opts: ["\\( \\sec x \\tan x \\)", "\\( \\tan x \\)", "\\( \\sec x \\)", "\\( \\sec^2 x \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int \\tan x \\, dx \\).", 
+            opts: ["\\( \\ln|\\cos x| + C \\)", "\\( \\sec^2 x + C \\)", "\\( \\ln|\\sec x| + C \\)", "\\( \\ln|\\sin x| + C \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( f(x,y) = x^3 y + y^3 x \\), find the second partial derivative \\( f_{xx} \\).", 
+            opts: ["\\( 6xy \\)", "\\( 3x^2 y \\)", "\\( 6xy + y^3 \\)", "\\( 6xy + 3y^2 x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: " Identify the nature of the stationary point at \\( (0,0) \\) for the surface \\( z = x^2 - y^2 \\).", 
+            opts: ["Local Maximum", "Local Minimum", "Saddle Point", "Inflection Point"], 
+            ans: 2 
+        },
+        { 
+            q: "The volume of a sphere is \\( V = \\frac{4}{3}\\pi r^3 \\). If there is a 0.5% error in measuring the radius \\( r \\), find the approximate percentage error in the volume.", 
+            opts: ["0.5%", "1.0%", "1.5%", "3.0%"], 
+            ans: 2 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) evaluated at the point \\( (1,1) \\) for the implicitly defined curve \\( x^2 + xy + y^2 = 3 \\).", 
+            opts: ["1", "-1", "1/2", "-1/2"], 
+            ans: 1 
+        },
+        { 
+            q: "What is the Maclaurin series expansion for \\( \\frac{1}{1+x} \\)?", 
+            opts: ["\\( 1 + x + x^2 + x^3 + \\dots \\)", "\\( 1 - x + x^2 - x^3 + \\dots \\)", "\\( 1 + 2x + 3x^2 + \\dots \\)", "\\( 1 - 2x + 3x^2 - \\dots \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the definite integral \\( \\int_0^1 e^{2x} \\, dx \\).", 
+            opts: ["\\( \\frac{e^2 - 1}{2} \\)", "\\( e^2 - 1 \\)", "\\( \\frac{e^2 + 1}{2} \\)", "\\( e^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "A particle's acceleration is given by \\( a(t) = 6t \\). If its initial velocity \\( v(0) = 2 \\), find the velocity function \\( v(t) \\).", 
+            opts: ["\\( 3t^2 \\)", "\\( 3t^2 + 2 \\)", "\\( 6t^2 + 2 \\)", "\\( t^3 + 2t \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( f(x,y) = e^{x+y} \\), find the mixed partial derivative \\( f_{xy} \\).", 
+            opts: ["\\( e^{x+y} \\)", "\\( xye^{x+y} \\)", "\\( (x+y)e^{x+y} \\)", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit at infinity: \\( \\lim_{x \\to \\infty} \\frac{4x^2 - x}{2x^2 + 1} \\).", 
+            opts: ["0", "2", "4", "\\( \\infty \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the indefinite integral using integration by parts: \\( \\int x e^x \\, dx \\).", 
+            opts: ["\\( x e^x + e^x + C \\)", "\\( x e^x - e^x + C \\)", "\\( \\frac{x^2}{2} e^x + C \\)", "\\( e^x - x e^x + C \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the maximum value of the function \\( y = -x^2 + 4x \\).", 
+            opts: ["2", "4", "0", "8"], 
+            ans: 1 
+        },
+        { 
+            q: "Given \\( y = x^3 \\), if \\( x \\) experiences a 2% increase, find the approximate percentage increase in \\( y \\).", 
+            opts: ["2%", "4%", "6%", "8%"], 
+            ans: 2 
+        },
+      { 
+            q: "Find the derivative \\( f'(x) \\) of the function \\( f(x) = \\frac{x^2}{x+1} \\) using the quotient rule.", 
+            opts: ["\\( \\frac{x^2 + 2x}{(x+1)^2} \\)", "\\( \\frac{x^2 - 2x}{(x+1)^2} \\)", "\\( \\frac{2x}{x+1} \\)", "\\( \\frac{3x^2}{(x+1)^2} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: " Evaluate the definite integral to find the area under the curve \\( y = \\frac{1}{x} \\) from \\( x = 1 \\) to \\( x = e^2 \\).", 
+            opts: ["1", "e", "2", "\\( e^2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the partial derivative \\( f_x \\) for the function \\( f(x,y) = \\sin(xy) + e^{x^2y} \\).", 
+            opts: ["\\( y\\cos(xy) + 2xye^{x^2y} \\)", "\\( x\\cos(xy) + x^2e^{x^2y} \\)", "\\( \\cos(xy) + 2xe^{x^2y} \\)", "\\( y\\sin(xy) + 2xye^{x^2y} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the limit using L'Hôpital's Rule: \\( \\lim_{x \\to \\infty} \\frac{\\ln x}{x} \\).", 
+            opts: ["1", "\\( \\infty \\)", "0", "-1"], 
+            ans: 2 
+        },
+        { 
+            q: "A cylindrical tank has a radius \\( r = 5 \\text{ m} \\) and height \\( h = 10 \\text{ m} \\). If the radius increases by \\( 0.2 \\text{ m} \\) and height decreases by \\( 0.1 \\text{ m} \\), find the approximate change in the volume.", 
+            opts: ["\\( 10\\pi \\text{ m}^3 \\)", "\\( 15\\pi \\text{ m}^3 \\)", "\\( 17.5\\pi \\text{ m}^3 \\)", "\\( 20\\pi \\text{ m}^3 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate the indefinite integral \\( \\int x^2 \\cos(x^3) \\, dx \\).", 
+            opts: ["\\( \\frac{1}{3}\\sin(x^3) + C \\)", "\\( \\frac{1}{3}\\cos(x^3) + C \\)", "\\( 3\\sin(x^3) + C \\)", "\\( x^3\\sin(x^3) + C \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the equation of the tangent line to the curve \\( y = x^3 - 3x + 2 \\) at the point \\( x = 2 \\).", 
+            opts: ["\\( y = 9x - 14 \\)", "\\( y = 9x - 4 \\)", "\\( y = 3x - 2 \\)", "\\( y = 12x - 20 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the coefficient of \\( x^4 \\) in the Maclaurin series expansion of \\( \\cos(2x) \\)?", 
+            opts: ["2/3", "4/3", "1/24", "1/6"], 
+            ans: 0 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) evaluated at \\( (1,1) \\) for the relation \\( x^3 + y^3 = 2xy \\).", 
+            opts: ["-1", "1", "0", "-2"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the Taylor series expansion for \\( f(x) = e^x \\) centered at \\( a = 2 \\), up to the first two terms.", 
+            opts: ["\\( e^2 + e^2(x-2) \\)", "\\( 1 + e^2(x-2) \\)", "\\( e^2 + e(x-2) \\)", "\\( e^2 + \\frac{e^2}{2}(x-2) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Calculate the differential \\( dy \\) for the function \\( y = \\sqrt{x^2 + 1} \\).", 
+            opts: ["\\( \\frac{x}{\\sqrt{x^2+1}} dx \\)", "\\( \\frac{2x}{\\sqrt{x^2+1}} dx \\)", "\\( \\frac{1}{2\\sqrt{x^2+1}} dx \\)", "\\( \\frac{x}{2\\sqrt{x^2+1}} dx \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the absolute maximum value of \\( f(x) = -x^2 + 8x - 12 \\) on the interval \\( [0, 6] \\).", 
+            opts: ["4", "0", "-12", "16"], 
+            ans: 0 
+        },
+      { 
+            q: "Find the higher-order total derivative \\( \\frac{d^2y}{dx^2} \\) for the parametric equations \\( x = \\cos t \\) and \\( y = \\sin t \\).", 
+            opts: ["\\( \\csc^3 t \\)", "\\( -\\csc^3 t \\)", "\\( -\\cot^3 t \\)", "\\( \\sec^3 t \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Using successive implicit differentiation, evaluate \\( \\frac{d^2y}{dx^2} \\) for the circle \\( x^2 + y^2 = 25 \\) at the point \\( (3,4) \\).", 
+            opts: ["-25/64", "25/64", "-9/16", "9/16"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( z = x^3 \\sin y \\), evaluate the higher-order mixed partial derivative \\( z_{xxy} \\) (i.e., \\( \\frac{\\partial^3 z}{\\partial x^2 \\partial y} \\)).", 
+            opts: ["\\( 6x \\cos y \\)", "\\( 3x^2 \\cos y \\)", "\\( 6x \\sin y \\)", "\\( -6x \\cos y \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "The period of a pendulum is \\( T = 2\\pi\\sqrt{\\frac{L}{g}} \\). Using total differentials, find the approximate percentage change in \\( T \\) if length \\( L \\) increases by 2% and gravity \\( g \\) increases by 1%.", 
+            opts: ["1.5%", "0.5%", "1.0%", "3.0%"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the third derivative \\( y''' \\) of the function \\( y = x^2 e^x \\).", 
+            opts: ["\\( (x^2 + 4x + 2)e^x \\)", "\\( (x^2 + 6x + 6)e^x \\)", "\\( (x^2 + 2x)e^x \\)", "\\( (x^2 + 8x + 12)e^x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the total derivative \\( \\frac{dz}{dt} \\) if \\( z = xy \\), given \\( x = e^t \\) and \\( y = e^{-t} \\).", 
+            opts: ["\\( e^t \\)", "1", "0", "-1"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate \\( \\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2} \\) for the function \\( u = \\ln(x^2 + y^2) \\) (The 2D Laplace Operator).", 
+            opts: ["\\( \\frac{1}{x^2+y^2} \\)", "\\( \\frac{4}{x^2+y^2} \\)", "0", "1"], 
+            ans: 2 
+        },
+        { 
+            q: "Using small increments (linear approximation), find the approximate change \\( \\delta y \\) for \\( y = \\frac{1}{x} \\) if \\( x \\) changes from 2 to 2.01.", 
+            opts: ["0.0025", "-0.0025", "-0.025", "0.025"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the second derivative \\( \\frac{d^2y}{dx^2} \\) implicitly for the hyperbola \\( x^2 - y^2 = a^2 \\).", 
+            opts: ["\\( -\\frac{a^2}{y^3} \\)", "\\( \\frac{a^2}{y^3} \\)", "\\( \\frac{x^2}{y^3} \\)", "\\( -\\frac{x^2}{y^3} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Given \\( z = x^2 + y^2 \\), if both \\( x \\) and \\( y \\) are increased by 1%, what is the approximate percentage increase in \\( z \\) using total differentials?", 
+            opts: ["1%", "2%", "3%", "4%"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( f(x,y) = e^{xy} \\), find the higher-order partial derivative \\( f_{xxy} \\).", 
+            opts: ["\\( xye^{xy} \\)", "\\( ye^{xy}(2 + xy) \\)", "\\( xe^{xy}(2 + xy) \\)", "\\( y^2e^{xy} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the fourth derivative \\( y^{(4)} \\) of the function \\( y = \\cos(3x) \\).", 
+            opts: ["\\( -81\\cos(3x) \\)", "\\( 81\\sin(3x) \\)", "\\( 81\\cos(3x) \\)", "\\( -81\\sin(3x) \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find \\( \\frac{dy}{dx} \\) for the function \\( y = x^x \\) using logarithmic differentiation.", 
+            opts: ["\\( x^x \\ln x \\)", "\\( x^x(\\ln x + 1) \\)", "\\( x^{x-1} \\)", "\\( x^x(\\ln x - 1) \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "
+
+[Image of parallel resistor circuit diagram]
+ Two resistors \\( R_1 \\) and \\( R_2 \\) are connected in parallel such that \\( \\frac{1}{R} = \\frac{1}{R_1} + \\frac{1}{R_2} \\). Using total differentials, find \\( dR \\).", 
+            opts: ["\\( \\left(\\frac{R}{R_1}\\right)^2 dR_1 + \\left(\\frac{R}{R_2}\\right)^2 dR_2 \\)", "\\( \\left(\\frac{R_1}{R}\\right)^2 dR_1 + \\left(\\frac{R_2}{R}\\right)^2 dR_2 \\)", "\\( dR_1 + dR_2 \\)", "\\( R_1 dR_1 + R_2 dR_2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "In calculus notation, the higher-order partial derivative \\( \\frac{\\partial^3 z}{\\partial x^2 \\partial y} \\) instructs you to:", 
+            opts: ["Differentiate with respect to y twice, then x.", "Differentiate with respect to y, then x twice.", "Differentiate with respect to x twice.", "Differentiate with respect to x, then y twice."], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the limit: \\( \\lim_{x \\to 0} \\frac{\\tan 3x}{\\sin 2x} \\).", 
+            opts: ["2/3", "3/2", "0", "1"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the first partial derivative \\( f_y \\) of \\( f(x,y) = \\frac{x}{y} + \\frac{y}{x} \\).", 
+            opts: ["\\( -\\frac{x}{y^2} + \\frac{1}{x} \\)", "\\( \\frac{1}{y} - \\frac{y}{x^2} \\)", "\\( \\frac{x}{y^2} + \\frac{1}{x} \\)", "\\( -\\frac{x}{y^2} - \\frac{1}{x} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If the area of a circle is expanding at a rate of \\( 10\\pi \\text{ cm}^2/\\text{s} \\), find the rate of change of the radius when the radius is \\( 5 \\text{ cm} \\).", 
+            opts: ["\\( 1 \\text{ cm/s} \\)", "\\( 2 \\text{ cm/s} \\)", "\\( 5 \\text{ cm/s} \\)", "\\( 10 \\text{ cm/s} \\)"], 
+            ans: 0 
+        },
+    ];
+
+    const newQuestions = [
+        // ---> PASTE NEW TOPIC QUESTIONS HERE <---
+        { 
+            q: "Find the Jacobian determinant \\( J = \\frac{\\partial(x,y)}{\\partial(u,v)} \\) for the polar coordinate transformation \\( x = u\\cos v \\) and \\( y = u\\sin v \\).", 
+            opts: ["\\( u^2 \\)", "\\( u \\)", "\\( \\cos v \\)", "\\( 1 \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( u = x^2 - y^2 \\) and \\( v = 2xy \\), compute the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\).", 
+            opts: ["\\( 4(x^2 + y^2) \\)", "\\( 2(x^2 - y^2) \\)", "\\( 4xy \\)", "\\( x^2 + y^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Verify the Mean Value Theorem for the function \\( f(x) = x^3 - 2x \\) on the interval \\( [-1, 2] \\), and find the value(s) of \\( c \\).", 
+            opts: ["\\( c = 0 \\)", "\\( c = -1 \\)", "\\( c = 1 \\)", "\\( c = \\pm 1 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Check if Rolle's Theorem applies to \\( f(x) = x^2 - 4x + 3 \\) on the interval \\( [1, 3] \\). If it does, find the value of \\( c \\).", 
+            opts: ["Does not apply", "\\( c = 1 \\)", "\\( c = 2 \\)", "\\( c = 3 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x,y) \\) of \\( f(x, y) = \\sin(\\pi xy^2) \\) at \\( (1,1) \\).", 
+            opts: ["\\( \\pi(x-1) + 2\\pi(y-1) \\)", "\\( -\\pi(x-1) - 2\\pi(y-1) \\)", "\\( -\\pi x - 2\\pi y \\)", "\\( \\pi(x+1) + 2\\pi(y+1) \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Consider \\( f(x, y) = 4 + x - x^2 - y^3 \\). Use linearization at \\( (1, 1) \\) to approximate \\( f(0.9, 1.2) \\).", 
+            opts: ["2.0", "2.5", "2.8", "3.1"], 
+            ans: 1 
+        },
+        { 
+            q: "Use the linearization of \\( f(x) = \\sqrt{x+3} \\) at \\( a = 1 \\) to approximate \\( \\sqrt{4.05} \\).", 
+            opts: ["2.0125", "2.025", "2.05", "2.125"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the lower bound for the definite integral \\( \\int_1^3 \\frac{1}{x} dx \\) without evaluating it, using the minimum value of the function.", 
+            opts: ["1", "1/2", "2/3", "2"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( W = \\int_C \\vec{F} \\cdot d\\vec{r} \\) from \\( (0,0) \\) to \\( (2,4) \\) along the path \\( y = x^2 \\), where \\( \\vec{F} = x^2\\hat{i} + y^2\\hat{j} \\). Find the Work done (\\( W \\)).", 
+            opts: ["16", "24", "32", "48"], 
+            ans: 1 
+        },
+      { 
+            q: "Find the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\) if \\( u = e^x \\cos y \\) and \\( v = e^x \\sin y \\).", 
+            opts: ["\\( e^{2x} \\)", "\\( e^x \\)", "\\( e^{2x}(\\cos^2 y - \\sin^2 y) \\)", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the Jacobian determinant \\( |J| \\) for the spherical coordinate transformation \\( x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi \\)?", 
+            opts: ["\\( \\rho^2\\sin\\phi \\)", "\\( \\rho\\sin^2\\phi \\)", "\\( \\rho^2\\cos\\phi \\)", "\\( \\rho\\sin\\phi \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Verify the Mean Value Theorem for \\( f(x) = \\sqrt{x} \\) on the interval \\( [0, 4] \\). Find the value of \\( c \\).", 
+            opts: ["1", "2", "3", "0.5"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the value of \\( c \\) that satisfies Rolle's Theorem for \\( f(x) = \\sin x \\) on the interval \\( [0, \\pi] \\).", 
+            opts: ["\\( \\pi/2 \\)", "\\( \\pi/4 \\)", "\\( \\pi/3 \\)", "\\( \\pi/6 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Without integrating, determine the upper bound of \\( \\int_0^1 e^{-x^2} \\, dx \\) using the maximum value of the function on the interval.", 
+            opts: ["1", "e", "1/e", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "Without integrating, determine the lower bound of \\( \\int_1^2 \\ln x \\, dx \\) using the minimum value of the function on the interval.", 
+            opts: ["0", "\\( \\ln 2 \\)", "1", "1/2"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C y \\, dx + x \\, dy \\), where \\( C \\) is the curve \\( y = x^2 \\) from \\( (0,0) \\) to \\( (1,1) \\).", 
+            opts: ["1", "0", "1/2", "2"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\oint_C x \\, dy - y \\, dx \\), where \\( C \\) is the unit circle \\( x^2 + y^2 = 1 \\) traversed counterclockwise.", 
+            opts: ["\\( 2\\pi \\)", "\\( \\pi \\)", "0", "\\( -\\pi \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x) \\) for the function \\( f(x) = e^x \\) at \\( a = 0 \\).", 
+            opts: ["\\( 1 + x \\)", "\\( 1 - x \\)", "\\( e + x \\)", "\\( x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Use linear approximation to estimate the value of \\( \\sqrt[3]{8.12} \\).", 
+            opts: ["2.01", "2.02", "2.12", "2.04"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the Maclaurin series expansion for \\( \\ln(1+x) \\)?", 
+            opts: ["\\( x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\dots \\)", "\\( x + \\frac{x^2}{2} + \\frac{x^3}{3} + \\dots \\)", "\\( 1 - x + x^2 - \\dots \\)", "\\( x - \\frac{x^3}{3!} + \\dots \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Recall the property of definite integrals: If \\( f(x) \\) is an odd continuous function, then \\( \\int_{-a}^a f(x) \\, dx = \\)", 
+            opts: ["0", "\\( 2\\int_0^a f(x) \\, dx \\)", "a", "-a"], 
+            ans: 0 
+        },
+        { 
+            q: "Application of Integrals: Find the exact area bounded by the curve \\( y = x^2 \\), the x-axis, and the lines \\( x = 0 \\) and \\( x = 3 \\).", 
+            opts: ["9", "3", "27", "6"], 
+            ans: 0 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = 3x^2 \\) on the interval \\( [1, 3] \\).", 
+            opts: ["13", "26", "9", "12"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( u = x + y \\) and \\( v = x - y \\), find the absolute value of the Jacobian determinant \\( |J| = \\left| \\frac{\\partial(u,v)}{\\partial(x,y)} \\right| \\).", 
+            opts: ["2", "1", "0", "4"], 
+            ans: 0 
+        },
+      { 
+            q: " What is the absolute value of the Jacobian determinant \\( |J| = \\left| \\frac{\\partial(u,v)}{\\partial(x,y)} \\right| \\) if \\( u = x^2 \\) and \\( v = y^2 \\)?", 
+            opts: ["\\( 2xy \\)", "\\( 4xy \\)", "\\( x^2y^2 \\)", "\\( x+y \\)"], 
+            ans: 1 
+        },
+        { 
+            q: " Apply the Mean Value Theorem to \\( f(x) = \\ln x \\) on the interval \\( [1, e] \\). Find the value of \\( c \\).", 
+            opts: ["\\( e \\)", "\\( e-1 \\)", "\\( \\frac{e}{2} \\)", "\\( 1 \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the value of \\( c \\) that satisfies Rolle's Theorem for \\( f(x) = x^2 - 2x \\) on the interval \\( [0, 2] \\).", 
+            opts: ["0", "0.5", "1", "2"], 
+            ans: 2 
+        },
+        { 
+            q: "Without integrating, determine the upper bound of the definite integral \\( \\int_0^1 \\sin(x^2) \\, dx \\) using the maximum possible value of the sine function.", 
+            opts: ["0", "1", "\\( \\pi \\)", "2"], 
+            ans: 1 
+        },
+        { 
+            q: "Determine the lower bound of \\( \\int_1^3 e^x \\, dx \\) using the minimum value of the function on the interval.", 
+            opts: ["\\( 2e \\)", "\\( e \\)", "\\( e^3 \\)", "\\( 2e^3 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Using the Fundamental Theorem of Line Integrals, evaluate \\( \\int_C \\nabla f \\cdot d\\vec{r} \\) where \\( f(x,y) = x^2y \\) and \\( C \\) is any smooth curve from \\( (0,0) \\) to \\( (1,2) \\).", 
+            opts: ["0", "1", "2", "4"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x) \\) of \\( f(x) = \\sin x \\) at \\( a = 0 \\).", 
+            opts: ["1", "x", "\\( -x \\)", "\\( 1+x \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Use a linear approximation at \\( a = 16 \\) to estimate the value of \\( \\sqrt{16.2} \\).", 
+            opts: ["4.0125", "4.025", "4.05", "4.2"], 
+            ans: 1 
+        },
+        { 
+            q: "Compute the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\) for the linear transformation \\( u = x + 2y \\) and \\( v = 3x - y \\).", 
+            opts: ["-7", "7", "-5", "5"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the work done by the force field \\( \\vec{F} = y\\hat{i} - x\\hat{j} \\) moving a particle clockwise along the unit circle \\( x^2 + y^2 = 1 \\).", 
+            opts: ["0", "\\( \\pi \\)", "\\( -2\\pi \\)", "\\( 2\\pi \\)"], 
+            ans: 3 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = 2x \\) on the interval \\( [0, 2] \\).", 
+            opts: ["1", "2", "4", "0"], 
+            ans: 1 
+        },
+        { 
+            q: "What is the coefficient of the \\( x^3 \\) term in the Maclaurin series expansion of \\( e^{2x} \\)?", 
+            opts: ["1/6", "4/3", "8", "2/3"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x,y) \\) of the function \\( f(x,y) = \\ln(xy) \\) at the point \\( (1,1) \\).", 
+            opts: ["\\( x+y \\)", "\\( x-y \\)", "\\( x+y-2 \\)", "\\( 2x+2y-2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C (x\\,dx + y\\,dy) \\) along any path from \\( (0,0) \\) to \\( (3,4) \\) by finding a potential function.", 
+            opts: ["25", "25/2", "5", "7/2"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( u = 2x \\) and \\( v = 3y \\), what is the area scaling factor (Jacobian) when transforming from the xy-plane to the uv-plane?", 
+            opts: ["6", "1/6", "5", "1/5"], 
+            ans: 0 
+        },
+      { 
+            q: " Find the Jacobian determinant \\( J = \\frac{\\partial(x,y,z)}{\\partial(r,\\theta,z)} \\) for the cylindrical coordinate transformation \\( x = r\\cos\\theta, y = r\\sin\\theta, z = z \\).", 
+            opts: ["1", "\\( r^2 \\)", "\\( r \\)", "\\( \\cos\\theta \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "If \\( u = 3x + 2y \\) and \\( v = x - y \\), compute the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\).", 
+            opts: ["-5", "5", "1", "-1"], 
+            ans: 0 
+        },
+        { 
+            q: "Apply the Mean Value Theorem to \\( f(x) = x^3 \\) on the interval \\( [-1, 1] \\). Find the value(s) of \\( c \\).", 
+            opts: ["0", "\\( \\pm \\frac{1}{\\sqrt{3}} \\)", "\\( \\pm 1 \\)", "\\( \\frac{1}{3} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Check if Rolle's Theorem applies to \\( f(x) = \\cos x \\) on the interval \\( [0, 2\\pi] \\). If so, find the value of \\( c \\).", 
+            opts: ["Does not apply", "\\( \\pi/2 \\)", "\\( \\pi \\)", "\\( 3\\pi/2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Determine the upper bound for the definite integral \\( \\int_0^{\\pi/2} \\sin x \\, dx \\) without evaluating it, using the maximum value of the function.", 
+            opts: ["1", "\\( \\pi \\)", "\\( \\pi/2 \\)", "2"], 
+            ans: 2 
+        },
+        { 
+            q: "Determine the lower bound for the definite integral \\( \\int_2^4 \\frac{1}{x^2} \\, dx \\) without evaluating it.", 
+            opts: ["1/16", "1/8", "1/4", "1/2"], 
+            ans: 1 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C (2x+y)\\,dx + (x-2y)\\,dy \\) over the straight line from \\( (0,0) \\) to \\( (1,1) \\).", 
+            opts: ["0", "1", "2", "3"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the work done by the force field \\( \\vec{F} = y\\hat{i} - x\\hat{j} \\) moving a particle along the straight line from \\( (0,0) \\) to \\( (1,1) \\).", 
+            opts: ["1", "-1", "0", "1/2"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x,y) \\) of \\( f(x,y) = e^{x-y} \\) at the point \\( (1,1) \\).", 
+            opts: ["\\( x - y \\)", "\\( x - y + 1 \\)", "\\( x + y - 1 \\)", "\\( e(x - y) \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Use linear approximation to estimate the value of \\( \\sqrt[4]{17} \\), using \\( a = 16 \\).", 
+            opts: ["2.0125", "2.025", "2.03125", "2.0625"], 
+            ans: 2 
+        },
+        { 
+            q: " Application of Integrals: Find the exact area under the first arch of \\( y = \\sin x \\) from \\( x = 0 \\) to \\( x = \\pi \\).", 
+            opts: ["1", "\\( \\pi \\)", "2", "\\( \\pi/2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the Taylor polynomial of degree 2 for \\( f(x) = e^x \\) centered at \\( a = 0 \\).", 
+            opts: ["\\( 1 + x + x^2 \\)", "\\( 1 + x + \\frac{x^2}{2} \\)", "\\( 1 - x + \\frac{x^2}{2} \\)", "\\( x + \\frac{x^2}{2} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the value of \\( c \\) for \\( f(x) = x \\) on the interval \\( [0, 2] \\).", 
+            opts: ["0.5", "1", "1.5", "2"], 
+            ans: 1 
+        },
+        { 
+            q: "Compute the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\) if \\( u = xy \\) and \\( v = \\frac{x}{y} \\).", 
+            opts: ["\\( \\frac{2x}{y} \\)", "\\( -\\frac{2x}{y} \\)", "\\( \\frac{x^2}{y^2} \\)", "\\( -\\frac{x}{y^2} \\)"], 
+            ans: 1 
+        },
+        { 
+            q: " Without integrating, determine the upper bound of \\( \\int_1^5 e^{-x} \\, dx \\) using the maximum value of the function on the interval.", 
+            opts: ["\\( 4e^{-1} \\)", "\\( 4e^{-5} \\)", "\\( e^{-1} \\)", "\\( 5e^{-1} \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Compute the Jacobian determinant \\( J = \\frac{\\partial(u,v)}{\\partial(x,y)} \\) for the linear transformation \\( u = 2x - 3y \\) and \\( v = x + 4y \\).", 
+            opts: ["11", "5", "8", "-11"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C (x+y) \\, ds \\) where \\( C \\) is the straight line segment from \\( (0,0) \\) to \\( (3,4) \\).", 
+            opts: ["15", "35/2", "35", "17.5\\pi"], 
+            ans: 1 
+        },
+        { 
+            q: " Apply the Mean Value Theorem to \\( f(x) = \\frac{1}{x} \\) on the interval \\( [1, 2] \\). Find the value of \\( c \\).", 
+            opts: ["1.5", "\\( \\sqrt{2} \\)", "1", "1.75"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the value(s) of \\( c \\) that satisfy Rolle's Theorem for \\( f(x) = x^3 - x \\) on the interval \\( [-1, 1] \\).", 
+            opts: ["0", "\\( \\pm 1 \\)", "\\( \\pm \\frac{1}{\\sqrt{3}} \\)", "Does not apply"], 
+            ans: 2 
+        },
+        { 
+            q: "Without integrating, determine the upper bound of \\( \\int_0^2 \\frac{1}{x+1} \\, dx \\) using the maximum value of the function on the interval.", 
+            opts: ["2", "1", "2/3", "4"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the lower bound of \\( \\int_1^4 \\sqrt{x} \\, dx \\) using the minimum value of the function on the interval.", 
+            opts: ["1", "2", "3", "6"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x) \\) of \\( f(x) = \\frac{1}{x} \\) at \\( a = 1 \\).", 
+            opts: ["\\( 2 - x \\)", "\\( x \\)", "\\( 1 - x \\)", "\\( 2 + x \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x,y) \\) for \\( f(x,y) = x^2 y \\) at the point \\( (1,2) \\).", 
+            opts: ["\\( 2 + 4(x-1) + (y-2) \\)", "\\( 2 + 2(x-1) + 2(y-2) \\)", "\\( 4x + y - 2 \\)", "\\( 2 + 4x + y \\)"], 
+            ans: 0 
+        },
+        { 
+            q: " When transforming a triple integral from Cartesian \\( (x,y,z) \\) to Spherical coordinates \\( (\\rho,\\theta,\\phi) \\), what is the absolute value of the Jacobian determinant \\( |J| \\)?", 
+            opts: ["\\( \\rho \\sin\\phi \\)", "\\( \\rho^2 \\sin\\phi \\)", "\\( \\rho^2 \\cos\\phi \\)", "1"], 
+            ans: 1 
+        },
+        { 
+            q: "Find the work done by the force field \\( \\vec{F} = x\\hat{i} + y\\hat{j} \\) moving a particle from \\( (0,0) \\) to \\( (1,1) \\) along the path \\( y = x \\).", 
+            opts: ["0", "1/2", "1", "2"], 
+            ans: 2 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = \\sin x \\) on the interval \\( [0, \\pi] \\).", 
+            opts: ["\\( 2/\\pi \\)", "\\( \\pi/2 \\)", "0", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C \\nabla f \\cdot d\\vec{r} \\) where the potential function is \\( f(x,y) = x^2+y^2 \\) and \\( C \\) is any path from \\( (0,0) \\) to \\( (1,1) \\).", 
+            opts: ["1", "2", "0", "4"], 
+            ans: 1 
+        },
+        { 
+            q: "If the Jacobian \\( \\frac{\\partial(u,v)}{\\partial(x,y)} = 5 \\), what is the value of the inverse Jacobian \\( \\frac{\\partial(x,y)}{\\partial(u,v)} \\)?", 
+            opts: ["-5", "25", "1/5", "1"], 
+            ans: 2 
+        },
+        { 
+            q: "Without evaluating the integral, determine the upper bound of \\( \\int_0^1 e^{x^2} \\, dx \\) using the maximum value of the integrand.", 
+            opts: ["1", "\\( e \\)", "\\( e - 1 \\)", "\\( 2e \\)"], 
+            ans: 1 
+        },
+        { 
+            q: "Use the linear approximation of \\( f(x) = x^3 \\) at \\( a = 1 \\) to estimate \\( (1.01)^3 \\).", 
+            opts: ["1.01", "1.02", "1.03", "1.04"], 
+            ans: 2 
+        },
+      { 
+            q: "Find the Jacobian determinant \\( \\frac{\\partial(x,y)}{\\partial(u,v)} \\) for the transformation \\( x = u^2 + v^2 \\) and \\( y = 2uv \\).", 
+            opts: ["\\( 4(u^2 - v^2) \\)", "\\( 4(u^2 + v^2) \\)", "\\( 2(u^2 - v^2) \\)", "\\( 4uv \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Find the linearization \\( L(x,y,z) \\) of \\( f(x,y,z) = x^2 y z^3 \\) at the point \\( (1, 1, 1) \\).", 
+            opts: ["\\( 2x + y + 3z - 5 \\)", "\\( 2x + y + 3z - 6 \\)", "\\( x + 2y + 3z - 5 \\)", "\\( x + y + z - 2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Apply the Chain Rule for total derivatives: If \\( w = x^2 + y^2 \\), where \\( x = s+t \\) and \\( y = s-t \\), find \\( \\frac{\\partial w}{\\partial s} \\).", 
+            opts: ["\\( 4s \\)", "\\( 4t \\)", "\\( 2s \\)", "\\( 2t \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Total derivative implicitly: Given \\( F(x,y,z) = x^3 + y^3 + z^3 - 3xyz = 0 \\), find \\( \\frac{\\partial z}{\\partial x} \\) using the formula \\( -\\frac{F_x}{F_z} \\).", 
+            opts: ["\\( -\\frac{x^2 - yz}{z^2 - xy} \\)", "\\( \\frac{x^2 - yz}{z^2 - xy} \\)", "\\( -\\frac{y^2 - xz}{z^2 - xy} \\)", "\\( -\\frac{z^2 - xy}{x^2 - yz} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Clairaut's Theorem on higher-order partial derivatives states that:", 
+            opts: ["\\( f_{xy} = f_{yx} \\) for functions with continuous mixed partials.", "\\( f_{xx} = f_{yy} \\) for all continuous functions.", "\\( \\nabla \\times \\nabla f = 1 \\)", "\\( f_x + f_y = 0 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = e^x \\) on the interval \\( [0, \\ln 2] \\).", 
+            opts: ["\\( \\frac{1}{\\ln 2} \\)", "\\( \\ln 2 \\)", "\\( \\frac{2}{\\ln 2} \\)", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Compute the Jacobian determinant \\( J = \\frac{\\partial(x,y)}{\\partial(u,v)} \\) if \\( x = u^2 - v^2 \\) and \\( y = 2uv \\).", 
+            opts: ["\\( 4(u^2 + v^2) \\)", "\\( 2(u^2 + v^2) \\)", "\\( u^2 + v^2 \\)", "\\( 4uv \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Based on the inverse property of Jacobians, if \\( J = \\frac{\\partial(x,y)}{\\partial(u,v)} \\) and \\( J^* = \\frac{\\partial(u,v)}{\\partial(x,y)} \\), then the product \\( J \\cdot J^* \\) equals:", 
+            opts: ["1", "0", "-1", "\\( \\infty \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "When using the linear approximation \\( L(x) \\) of \\( f(x) \\) at \\( a \\), the approximation will UNDERESTIMATE the true value \\( f(x) \\) if:", 
+            opts: ["\\( f(x) \\) is concave up (\\( f''(x) > 0 \\))", "\\( f(x) \\) is concave down (\\( f''(x) < 0 \\))", "\\( f'(x) > 0 \\)", "\\( f'(x) < 0 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Electrical power is given by \\( P = \\frac{V^2}{R} \\). Using total differentials, find the approximate percentage change in \\( P \\) if Voltage \\( V \\) increases by 3% and Resistance \\( R \\) increases by 2%.", 
+            opts: ["1%", "4%", "5%", "8%"], 
+            ans: 1 
+        },
+        { 
+            q: "If \\( C \\) is a closed curve and \\( \\vec{F} = \\nabla f \\) is a conservative vector field, the line integral \\( \\oint_C \\nabla f \\cdot d\\vec{r} \\) evaluates to:", 
+            opts: ["0", "1", "\\( 2\\pi \\)", "Dependent on the curve"], 
+            ans: 0 
+        },
+        { 
+            q: "Apply the Chain Rule to find the higher-order total derivative \\( \\frac{d^2}{dx^2}(f(g(x))) \\).", 
+            opts: ["\\( f''(g(x))[g'(x)]^2 + f'(g(x))g''(x) \\)", "\\( f''(g(x))g''(x) \\)", "\\( f''(g(x))[g'(x)]^2 \\)", "\\( f'(g(x))g''(x) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: " The differential expression \\( M(x,y)dx + N(x,y)dy \\) is an exact differential if and only if:", 
+            opts: ["\\( \\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x} \\)", "\\( \\frac{\\partial M}{\\partial x} = \\frac{\\partial N}{\\partial y} \\)", "\\( \\frac{\\partial M}{\\partial y} = -\\frac{\\partial N}{\\partial x} \\)", "\\( M = N \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Find the Jacobian of the transformation from Cartesian coordinates \\( (x, y, z) \\) to Spherical coordinates \\( (r, \theta, \phi) \\).", 
+            opts: ["\\( r^2 \sin \theta \\)", "\\( r \sin \theta \\)", "\\( r^2 \cos \theta \\)", "\\( r \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the Jacobian \\( \frac{\partial(x, y)}{\partial(u, v)} \\) if \\( x = u(1-v) \\) and \\( y = uv \\).", 
+            opts: ["\\( u \\)", "\\( v \\)", "\\( 1-v \\)", "\\( uv \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the linearization \\( L(x, y) \\) of \\( f(x, y) = x^2 + y^2 \\) at \\( (1, 2) \\).", 
+            opts: ["\\( 2x + 4y - 5 \\)", "\\( 2x + 4y + 5 \\)", "\\( x + 2y - 5 \\)", "\\( 2x + 2y - 3 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Using the Mean Value Theorem for Integrals, find the average value of \\( f(x) = \sqrt{x} \\) on the interval \\( [0, 9] \\).", 
+            opts: ["2", "3", "4.5", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Rolle's Theorem: For \\( f(x) = x^2 - 5x + 6 \\) on \\( [2, 3] \\), the value of \\( c \\) such that \\( f'(c) = 0 \\) is:", 
+            opts: ["2.5", "2", "3", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the lower bound of \\( \int_0^1 \frac{1}{1+x} dx \\) using the properties of definite integrals.", 
+            opts: ["0.5", "1", "0", "0.75"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the Taylor series of \\( f(x) = \sin x \\) centered at \\( a = \pi/2 \\). The first two terms are:", 
+            opts: ["\\( 1 - \frac{1}{2}(x - \pi/2)^2 \\)", "\\( (x - \pi/2) - \frac{1}{6}(x - \pi/2)^3 \\)", "\\( 1 + (x - \pi/2) \\)", "\\( 1 - (x - \pi/2) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the second-order partial derivative \\( f_{yy} \\) for \\( f(x,y) = e^{x/y} \\).", 
+            opts: ["\\( \frac{x(x+2y)}{y^4} e^{x/y} \\)", "\\( \frac{x^2}{y^4} e^{x/y} \\)", "\\( -\frac{x}{y^2} e^{x/y} \\)", "\\( \frac{1}{y^2} e^{x/y} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "A line integral \\( \int_C F \cdot dr \\) is independent of the path if \\( F \\) is the gradient of some scalar function \\( f \\). This means \\( F \\) is:", 
+            opts: ["Conservative", "Solenoidal", "Rotational", "Linear"], 
+            ans: 0 
+        },
+        { 
+            q: "Use the linearization of \\( f(x) = \sqrt[3]{x} \\) at \\( a = 8 \\) to approximate \\( \sqrt[3]{8.06} \\).", 
+            opts: ["2.005", "2.01", "2.02", "2.002"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the absolute value of the Jacobian for \\( u = x + y \\) and \\( v = x - 2y \\).", 
+            opts: ["3", "1", "2", "0"], 
+            ans: 0 
+        },
+        { 
+            q: "According to the Mean Value Theorem, if \\( f(x) = x^2 \\) on \\( [1, 3] \\), the value of \\( c \\) is:", 
+            opts: ["2", "1.5", "2.5", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the total derivative of \\( w = f(x, y, z) \\) where \\( x, y, z \\) are functions of \\( t \\).", 
+            opts: ["\\( \frac{\partial f}{\partial x}\frac{dx}{dt} + \frac{\partial f}{\partial y}\frac{dy}{dt} + \frac{\partial f}{\partial z}\frac{dz}{dt} \\)", "\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} + \frac{\partial f}{\partial z} \\)", "\\( f_x + f_y + f_z \\)", "\\( \frac{df}{dt} = f_{xyz} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \int_C x dy \\) where \\( C \\) is the arc of the parabola \\( y = x^2 \\) from \\( (0,0) \\) to \\( (2,4) \\).", 
+            opts: ["16/3", "8/3", "4", "2"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the third term of the Maclaurin series for \\( f(x) = \cos x \\)?", 
+            opts: ["\\( x^4 / 24 \\)", "\\( -x^2 / 2 \\)", "\\( 1 \\)", "\\( -x^4 / 24 \\)"], 
+            ans: 0 
+        },
+      { 
+            q: "Compute the Jacobian determinant \\( J = \frac{\partial(u,v,w)}{\partial(x,y,z)} \\) for the identity transformation \\( u=x, v=y, w=z \\).", 
+            opts: ["1", "0", "-1", "3"], 
+            ans: 0 
+        },
+        { 
+            q: "In a transformation where \\( x = u + v \\) and \\( y = uv^2 \\), find the Jacobian \\( \frac{\partial(x,y)}{\partial(u,v)} \\).", 
+            opts: ["\\( v(2u - v) \\)", "\\( v^2 - 2uv \\)", "\\( 2uv - v^2 \\)", "\\( v^2 \\)"], 
+            ans: 2 
+        },
+        { 
+            q: "Using the Mean Value Theorem for \\( f(x) = \ln x \\) on \\( [1, e] \\), find the value of \\( c \\).", 
+            opts: ["\\( e - 1 \\)", "1", "\\( e \\)", "\\( \frac{1}{e-1} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the linear approximation \\( L(x) \\) of \\( f(x) = \cos x \\) at \\( a = \pi/2 \\).", 
+            opts: ["\\( -(x - \pi/2) \\)", "\\( (x - \pi/2) \\)", "0", "1"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the lower bound of \\( \int_0^1 \frac{dx}{\sqrt{1+x^4}} \\) using properties of definite integrals.", 
+            opts: ["\\( 1/\sqrt{2} \\)", "1", "0", "0.5"], 
+            ans: 0 
+        },
+        { 
+            q: "Rolle's Theorem fails for \\( f(x) = 1 - x^{2/3} \\) on \\( [-1, 1] \\) because:", 
+            opts: ["\\( f(x) \\) is not differentiable at \\( x=0 \\)", "\\( f(1) \neq f(-1) \\)", "The function is not continuous", "The interval is too large"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the absolute value of the Jacobian for \\( x = u/v \\) and \\( y = v \\).", 
+            opts: ["\\( 1/v \\)", "\\( u/v^2 \\)", "1", "\\( v \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Use linearization of \\( f(x) = e^x \\) at \\( a = 0 \\) to approximate \\( e^{0.05} \\).", 
+            opts: ["1.05", "1.005", "1.1", "0.95"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \oint_C (y^2 dx + x^2 dy) \\) where \\( C \\) is the boundary of the square \\( 0 \le x \le 1, 0 \le y \le 1 \\).", 
+            opts: ["0", "1", "2", "-1"], 
+            ans: 0 
+        },
+        { 
+            q: "The average value of \\( f(x) = x^n \\) on \\( [0, 1] \\) is:", 
+            opts: ["\\( \frac{1}{n+1} \\)", "\\( \frac{1}{n} \\)", "\\( n \\)", "\\( \frac{1}{n-1} \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the total derivative \\( \frac{du}{dx} \\) of \\( u = f(x, y) \\) where \\( y = g(x) \\).", 
+            opts: ["\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \frac{dy}{dx} \\)", "\\( \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \\)", "\\( f_x g'(x) \\)", "\\( f_y g'(x) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the Jacobian for the transformation to elliptical coordinates \\( x = a r \cos \theta, y = b r \sin \theta \\)?", 
+            opts: ["\\( abr \\)", "\\( r \\)", "\\( ab \\)", "\\( r^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "A line integral of a vector field \\( \vec{F} \\) is independent of path if and only if the curl of \\( \vec{F} \\) is:", 
+            opts: ["Zero", "One", "Constant", "Infinite"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the Maclaurin series for \\( f(x) = \frac{1}{1+x^2} \\).", 
+            opts: ["\\( 1 - x^2 + x^4 - x^6 + \dots \\)", "\\( 1 + x^2 + x^4 + \dots \\)", "\\( x - x^3 + x^5 \dots \\)", "\\( 1 - x + x^2 \dots \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "The Mean Value Theorem for Integrals states there exists a \\( c \\) such that \\( f(c) = \frac{1}{b-a} \int_a^b f(x) dx \\). What is \\( f(c) \\) called?", 
+            opts: ["Average value", "Median value", "Stationary value", "Maximum value"], 
+            ans: 0 
+        },
+        { 
+            q: "Find the 2D linearization \\( L(x,y) \\) to approximate \\( f(x,y) = \\sqrt{x^2 + y^2} \\) near the point \\( (3,4) \\).", 
+            opts: ["\\( 5 + \\frac{3}{5}(x-3) + \\frac{4}{5}(y-4) \\)", "\\( 5 + \\frac{4}{5}(x-3) + \\frac{3}{5}(y-4) \\)", "\\( 5 + 3(x-3) + 4(y-4) \\)", "\\( 5 + \\frac{1}{5}(x-3) + \\frac{1}{5}(y-4) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Without integrating, determine the upper bound of \\( \\int_0^2 \\frac{x}{x^2+1} \\, dx \\) by finding the maximum value of the integrand on the interval.", 
+            opts: ["1", "2", "0.5", "4"], 
+            ans: 0 
+        },
+        { 
+            q: "Consider the function \\( f(x) = |x| \\). Can the Mean Value Theorem be applied on the interval \\( [-1, 1] \\)?", 
+            opts: ["No, because \\( f(x) \\) is not differentiable at \\( x=0 \\).", "Yes, \\( c=0 \\).", "Yes, \\( c=\\pm 1 \\).", "No, because \\( f(x) \\) is not continuous."], 
+            ans: 0 
+        },
+        { 
+            q: "Without integrating, find the upper bound of the integral \\( \\int_0^1 \\frac{1}{1+x^2} \\, dx \\) by using the maximum value of the function on the interval.", 
+            opts: ["1/2", "1", "\\( \\pi/4 \\)", "2"], 
+            ans: 1 
+        },
+        { 
+            q: " Find the linear approximation \\( L(x) \\) of \\( f(x) = \\sqrt{x} \\) at \\( a = 9 \\).", 
+            opts: ["\\( 3 + \\frac{1}{6}(x-9) \\)", "\\( 3 + \\frac{1}{3}(x-9) \\)", "\\( 9 + \\frac{1}{6}(x-3) \\)", "\\( 3 - \\frac{1}{6}(x-9) \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C \\vec{F} \\cdot d\\vec{r} \\) where \\( \\vec{F} = \\nabla(\\sin(xy)) \\) and \\( C \\) is a curve from \\( (0,1) \\) to \\( (\\pi/2, 1) \\).", 
+            opts: ["0", "1", "\\( \\pi/2 \\)", "-1"], 
+            ans: 1 
+        },
+        { 
+            q: "Use the Mean Value Theorem for Integrals to find the average value of \\( f(x) = 3x^2 \\) on the interval \\( [0, 3] \\).", 
+            opts: ["9", "27", "3", "6"], 
+            ans: 0 
+        },
+        { 
+            q: "Determine the lower bound of the integral \\( \\int_0^{\\pi/4} \\tan x \\, dx \\) using the minimum value of the integrand on the interval.", 
+            opts: ["0", "1", "\\( \\pi/4 \\)", "1/2"], 
+            ans: 0 
+        },
+        { 
+            q: "Check if Rolle's Theorem applies to \\( f(x) = |x| \\) on the interval \\( [-1, 1] \\).", 
+            opts: ["Yes, c = 0", "Yes, c = 1", "No, because f(x) is not continuous", "No, because f(x) is not differentiable at x=0"], 
+            ans: 3 
+        },
+        { 
+            q: "Evaluate the line integral \\( \\int_C y^3 \\, ds \\) where \\( C \\) is the parametric curve \\( x = t^3, y = t \\) for \\( 0 \\le t \\le 1 \\).", 
+            opts: ["\\( \\frac{1}{54}(10\\sqrt{10} - 1) \\)", "\\( \\frac{1}{27}(10\\sqrt{10} - 1) \\)", "\\( \\frac{10\\sqrt{10}}{27} \\)", "\\( 1 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Apply the Mean Value Theorem to \\( f(x) = x^2 - 2x + 1 \\) on \\( [0, 2] \\). Find the value of \\( c \\).", 
+            opts: ["0", "0.5", "1", "1.5"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the Jacobian \\( \\frac{\\partial(u,v)}{\\partial(x,y)} \\) if \\( u = \\ln(x^2 + y^2) \\) and \\( v = \\tan^{-1}\\left(\\frac{y}{x}\\right) \\).", 
+            opts: ["\\( \\frac{2}{x^2+y^2} \\)", "\\( \\frac{1}{x^2+y^2} \\)", "\\( \\frac{2x}{x^2+y^2} \\)", "\\( 0 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "Use linear approximation to estimate \\( \\cos(0.1) \\) using \\( a = 0 \\).", 
+            opts: ["0.9", "0.99", "1", "1.1"], 
+            ans: 2 
+        },
+        { 
+            q: "Find the work done by the conservative force field \\( \\vec{F} = 2x\\hat{i} + 2y\\hat{j} \\) in moving a particle from \\( (0,0) \\) to \\( (3,4) \\).", 
+            opts: ["25", "5", "14", "7"], 
+            ans: 0 
+        },
+        { 
+            q: "What is the error bound (remainder) \\( R_1(x) \\) when using the linear approximation of \\( e^x \\) at \\( a=0 \\) to estimate \\( e^{0.1} \\)? (Assume \\( c \\) is in \\( [0, 0.1] \\)).", 
+            opts: ["\\( \\frac{e^c}{2}(0.1)^2 \\)", "\\( e^c(0.1) \\)", "\\( \\frac{e^c}{6}(0.1)^3 \\)", "\\( \\frac{1}{2}(0.1)^2 \\)"], 
+            ans: 0 
+        },
+        { 
+            q: "If \\( J = \\frac{\\partial(x,y)}{\\partial(u,v)} \\) and the variables are dependent such that \\( f(x,y) = 0 \\), what is the value of the Jacobian determinant \\( J \\)?", 
+            opts: ["1", "\\( \\infty \\)", "-1", "0"], 
+            ans: 3 
+        },
+        { 
+            q: " If the average value of a continuous function \\( f(x) \\) on \\( [2, 6] \\) is 10, what is the value of \\( \\int_2^6 f(x) \\, dx \\)?", 
+            opts: ["10", "40", "20", "4"], 
+            ans: 1 
+        },
+    ];
+
+    // ==========================================
+    // TEST LOGIC
+    // ==========================================
+    
+    let currentQuiz = [];
+    let userAnswers = [];
+    let currentIndex = 0;
+    let timeRemaining = 20 * 60; // 20 minutes
+    let timerInterval;
+
+    function startTest() {
+        generateQuiz();
+        if(currentQuiz.length === 0) {
+            alert("Please add questions to the question bank in the code first!");
+            return;
+        }
+        document.getElementById('landing-page').classList.add('hidden');
+        document.getElementById('test-page').classList.remove('hidden');
+        
+        renderNavGrid();
+        loadQuestion(0);
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function generateQuiz() {
+        let sLegacy = [...legacyQuestions].sort(() => 0.5 - Math.random());
+        let sNew = [...newQuestions].sort(() => 0.5 - Math.random());
+        
+        let numLegacy = Math.min(45, sLegacy.length);
+        let numNew = Math.min(60 - numLegacy, sNew.length);
+        
+        if (numLegacy + numNew < 60 && sLegacy.length > numLegacy) {
+            numLegacy = Math.min(60 - numNew, sLegacy.length);
+        }
+
+        let selectedLegacy = sLegacy.slice(0, numLegacy);
+        let selectedNew = sNew.slice(0, numNew);
+        
+        currentQuiz = [...selectedLegacy, ...selectedNew].sort(() => 0.5 - Math.random());
+        userAnswers = new Array(currentQuiz.length).fill(null);
+        document.getElementById('total-q-num').innerText = currentQuiz.length;
+    }
+
+    function loadQuestion(index) {
+        currentIndex = index;
+        const qData = currentQuiz[index];
+        
+        document.getElementById('current-q-num').innerText = index + 1;
+        document.getElementById('question-text').innerHTML = `${index + 1}. ${qData.q}`;
+        
+        let optsHtml = '';
+        qData.opts.forEach((opt, i) => {
+            let checked = userAnswers[index] === i ? 'checked' : '';
+            optsHtml += `
+                <label class="option-label" onclick="selectOption(${index}, ${i})">
+                    <input type="radio" name="q_opt" value="${i}" ${checked}>
+                    <span>${String.fromCharCode(65 + i)}. ${opt}</span>
+                </label>
+            `;
+        });
+        document.getElementById('options-container').innerHTML = optsHtml;
+        
+        if (window.MathJax) MathJax.typesetPromise();
+
+        document.querySelectorAll('.q-nav-btn').forEach((btn, i) => {
+            btn.classList.remove('active');
+            if(i === index) btn.classList.add('active');
+        });
+
+        document.getElementById('btn-prev').disabled = (index === 0);
+        document.getElementById('btn-next').disabled = (index === currentQuiz.length - 1);
+    }
+
+    function selectOption(qIndex, optIndex) {
+        userAnswers[qIndex] = optIndex;
+        document.querySelectorAll('.q-nav-btn')[qIndex].classList.add('answered');
+        loadQuestion(qIndex); 
+    }
+
+    function nextQuestion() {
+        if (currentIndex < currentQuiz.length - 1) loadQuestion(currentIndex + 1);
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) loadQuestion(currentIndex - 1);
+    }
+
+    function renderNavGrid() {
+        let gridHtml = '';
+        for(let i = 0; i < currentQuiz.length; i++) {
+            gridHtml += `<button class="q-nav-btn" onclick="loadQuestion(${i})">${i + 1}</button>`;
+        }
+        document.getElementById('q-nav-grid').innerHTML = gridHtml;
+    }
+
+    function updateTimer() {
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitTest();
+            return;
+        }
+        timeRemaining--;
+        let m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+        let s = (timeRemaining % 60).toString().padStart(2, '0');
+        document.getElementById('timer').innerText = `${m}:${s}`;
+    }
+
+    function submitTestConf() {
+        if(confirm("Are you sure you want to submit your test?")) {
+            clearInterval(timerInterval);
+            submitTest();
+        }
+    }
+
+    function submitTest() {
+        document.getElementById('test-page').classList.add('hidden');
+        document.getElementById('result-page').classList.remove('hidden');
+        
+        let score = 0;
+        userAnswers.forEach((ans, i) => {
+            if (ans === currentQuiz[i].ans) score++;
+        });
+        
+        let percentage = Math.round((score / currentQuiz.length) * 100);
+        document.getElementById('score-display').innerText = `${score} / ${currentQuiz.length}`;
+        document.getElementById('percentage-display').innerText = `${percentage}%`;
+        
+        let color = percentage >= 70 ? 'var(--success)' : (percentage >= 40 ? '#ffc107' : 'var(--danger)');
+        document.getElementById('score-display').style.color = color;
+    }
+
+    function showReview() {
+        document.getElementById('result-page').classList.add('hidden');
+        document.getElementById('review-page').classList.remove('hidden');
+        
+        let reviewHtml = '';
+        currentQuiz.forEach((q, i) => {
+            let userAnsText = userAnswers[i] !== null ? q.opts[userAnswers[i]] : "No answer selected";
+            let correctAnsText = q.opts[q.ans];
+            let isCorrect = userAnswers[i] === q.ans;
+            
+            reviewHtml += `
+                <div class="review-item">
+                    <p><strong>Question ${i + 1}:</strong> ${q.q}</p>
+                    <p>Your Answer: <span class="${isCorrect ? 'correct-ans' : 'wrong-ans'}">${userAnsText}</span></p>
+                    ${!isCorrect ? `<p class="correct-ans">Correct Answer: ${correctAnsText}</p>` : ''}
+                </div>
+            `;
+        });
+        document.getElementById('review-container').innerHTML = reviewHtml;
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+</script>
+
+</body>
+</html>
